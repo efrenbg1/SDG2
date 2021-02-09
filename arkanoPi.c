@@ -51,16 +51,18 @@ TipoLedDisplay led_display = {
 // la inicializacion de los diferentes elementos de los que consta nuestro sistema,
 // crear, si fuese necesario, los threads adicionales que pueda requerir el sistema
 // como el thread de exploración del teclado del PC
-int ConfiguraInicializaSistema (TipoSistema *p_sistema) {
+int ConfiguraInicializaSistema(TipoSistema *p_sistema)
+{
 	int result = 0;
 	// A completar por el alumno...
 	// ...
 
 	// Lanzamos thread para exploracion del teclado convencional del PC
-	result = piThreadCreate (thread_explora_teclado_PC);
+	result = piThreadCreate(thread_explora_teclado_PC);
 
-	if (result != 0) {
-		printf ("Thread didn't start!!!\n");
+	if (result != 0)
+	{
+		printf("Thread didn't start!!!\n");
 		return -1;
 	}
 
@@ -71,82 +73,92 @@ int ConfiguraInicializaSistema (TipoSistema *p_sistema) {
 // FUNCIONES LIGADAS A THREADS ADICIONALES
 //------------------------------------------------------
 
-PI_THREAD (thread_explora_teclado_PC) {
+PI_THREAD(thread_explora_teclado_PC)
+{
 	int teclaPulsada;
 
-	while(1) {
+	while (1)
+	{
 		delay(10); // Wiring Pi function: pauses program execution for at least 10 ms
 
-		piLock (STD_IO_BUFFER_KEY);
+		piLock(STD_IO_BUFFER_KEY);
 
-		if(kbhit()) {
+		if (kbhit())
+		{
 			teclaPulsada = kbread();
 
-			switch(teclaPulsada) {
+			switch (teclaPulsada)
+			{
+			// A completar por el alumno...
+			// ...
+			case 'a':
+				break;
+			case 's':
 				// A completar por el alumno...
 				// ...
-				case 's':
-					// A completar por el alumno...
-					// ...
-					printf("Tecla S pulsada!\n");
-					fflush(stdout);
-					break;
+				printf("Tecla S pulsada!\n");
+				fflush(stdout);
+				break;
 
-				case 'q':
-					exit(0);
-					break;
+			case 'q':
+				exit(0);
+				break;
 
-				default:
-					printf("INVALID KEY!!!\n");
-					break;
+			default:
+				printf("INVALID KEY!!!\n");
+				break;
 			}
 		}
 
-		piUnlock (STD_IO_BUFFER_KEY);
+		piUnlock(STD_IO_BUFFER_KEY);
 	}
 }
 
 // wait until next_activation (absolute time)
-void delay_until (unsigned int next) {
+void delay_until(unsigned int next)
+{
 	unsigned int now = millis();
-	if (next > now) {
-		delay (next - now);
+	if (next > now)
+	{
+		delay(next - now);
 	}
 }
 
-int main () {
+int main()
+{
 	unsigned int next;
 
 	// Maquina de estados: lista de transiciones
 	// {EstadoOrigen, CondicionDeDisparo, EstadoFinal, AccionesSiTransicion }
 	fsm_trans_t arkanoPi[] = {
-		{ WAIT_START, CompruebaBotonPulsado, WAIT_PUSH, InicializaJuego },
-		{ WAIT_PUSH, CompruebaTimeoutActualizacionJuego, WAIT_PUSH, ActualizarJuego },
-		{ WAIT_PUSH, CompruebaMovimientoIzquierda, WAIT_PUSH, MuevePalaIzquierda },
-		{ WAIT_PUSH, CompruebaMovimientoDerecha, WAIT_PUSH, MuevePalaDerecha },
-		{ WAIT_PUSH, CompruebaFinalJuego, WAIT_END, FinalJuego },
-		{ WAIT_END,  CompruebaBotonPulsado, WAIT_START, ReseteaJuego },
-		{-1, NULL, -1, NULL },
+		{WAIT_START, CompruebaBotonPulsado, WAIT_PUSH, InicializaJuego},
+		{WAIT_PUSH, CompruebaTimeoutActualizacionJuego, WAIT_PUSH, ActualizarJuego},
+		{WAIT_PUSH, CompruebaMovimientoIzquierda, WAIT_PUSH, MuevePalaIzquierda},
+		{WAIT_PUSH, CompruebaMovimientoDerecha, WAIT_PUSH, MuevePalaDerecha},
+		{WAIT_PUSH, CompruebaFinalJuego, WAIT_END, FinalJuego},
+		{WAIT_END, CompruebaBotonPulsado, WAIT_START, ReseteaJuego},
+		{-1, NULL, -1, NULL},
 	};
 
 	// Configuracion e incializacion del sistema
-	ConfiguraInicializaSistema (&sistema);
+	ConfiguraInicializaSistema(&sistema);
 
-	fsm_t* arkanoPi_fsm = fsm_new (WAIT_START, arkanoPi, &sistema);
+	fsm_t *arkanoPi_fsm = fsm_new(WAIT_START, arkanoPi, &sistema);
 
 	// A completar por el alumno...
 	// ...
 
 	next = millis();
-	while (1) {
-		fsm_fire (arkanoPi_fsm);
+	while (1)
+	{
+		fsm_fire(arkanoPi_fsm);
 
 		// A completar por el alumno...
 		// ...
 
 		next += CLK_MS;
-		delay_until (next);
+		delay_until(next);
 	}
 
-	fsm_destroy (arkanoPi_fsm);
+	fsm_destroy(arkanoPi_fsm);
 }
