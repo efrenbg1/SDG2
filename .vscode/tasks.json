@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "-lpthread",
+                "-lwiringPi",
+                "-lrt",
+                "*.c",
+                "-o",
+                "arkanoPi",
+                "-g"
+            ],
+            "group": "build"
+        }
+    ]
+}
