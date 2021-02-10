@@ -1,7 +1,9 @@
 
 #include "arkanoPi.h"
 
+// TODO Sesión 2
 int flags = 0;
+#define flag
 
 TipoSistema sistema;
 
@@ -86,28 +88,29 @@ PI_THREAD(thread_explora_teclado_PC)
 		if (kbhit())
 		{
 			teclaPulsada = kbread();
-
+			piLock(SYSTEM_FLAGS_KEY);
 			switch (teclaPulsada)
 			{
-			// A completar por el alumno...
-			// ...
+			// DONE A completar por el alumno...
 			case 'a':
+				flags |= FLAG_MOV_IZQUIERDA;
 				break;
-			case 's':
-				// A completar por el alumno...
-				// ...
-				printf("Tecla S pulsada!\n");
-				fflush(stdout);
+			case 'c':
+				flags |= FLAG_BOTON;
 				break;
-
+			case 'd':
+				flags |= FLAG_MOV_DERECHA;
+				break;
 			case 'q':
+				flags |= FLAG_FIN_JUEGO;
+				fflush(stdout);
 				exit(0);
 				break;
-
 			default:
 				printf("INVALID KEY!!!\n");
 				break;
 			}
+			piUnlock(SYSTEM_FLAGS_KEY);
 		}
 
 		piUnlock(STD_IO_BUFFER_KEY);
