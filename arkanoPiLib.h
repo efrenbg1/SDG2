@@ -59,7 +59,7 @@ void InicializaLadrillos(tipo_pantalla *p_ladrillos);
 void InicializaPelota(tipo_pelota *p_pelota);
 void InicializaPala(tipo_pala *p_pala);
 void InicializaPosiblesTrayectorias(tipo_pelota *p_pelota);
-void InicializaArkanoPi(tipo_arkanoPi *p_arkanoPi, int debug);
+void InicializaArkanoPi(tipo_arkanoPi *p_arkanoPi);
 void ResetArkanoPi(tipo_arkanoPi *p_arkanoPi);
 void ReseteaMatriz(tipo_pantalla *p_pantalla);
 
@@ -84,7 +84,7 @@ void PintaPantallaPorTerminal (tipo_pantalla *p_pantalla);
 void PintaLadrillos(tipo_pantalla *p_ladrillos, tipo_pantalla *p_pantalla);
 void PintaPala(tipo_pala *p_pala, tipo_pantalla *p_pantalla);
 void PintaPelota(tipo_pelota *p_pelota, tipo_pantalla *p_pantalla);
-void ActualizaPantalla(tipo_arkanoPi* p_arkanoPi, int debug);
+void ActualizaPantalla(tipo_arkanoPi* p_arkanoPi);
 
 //------------------------------------------------------
 // FUNCIONES DE TRANSICION DE LA MAQUINA DE ESTADOS

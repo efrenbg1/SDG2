@@ -11,7 +11,10 @@
 
 typedef struct {
 	tipo_arkanoPi arkanoPi;
-	int debug;
+	// Aqui podrian añadirse otros juegos...
+	// tipo_otroJuego1 otroJuego1;
+	// tipo_otroJuego2 otroJuego2;
+	// ...
 } TipoSistema;
 
 //------------------------------------------------------

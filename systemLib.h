@@ -9,13 +9,14 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/time.h>
-//#include <wiringPi.h>
+//s#include <wiringPi.h>
 #include "pseudoWiringPi.h"
 
 #include "kbhit.h" // para poder detectar teclas pulsadas sin bloqueo y leer las teclas pulsadas
 #include "fsm.h"
 #include "tmr.h"
 
+#define __SIN_PSEUDOWIRINGPI__
 #define CLK_MS 1
 
 // ATENCION: Valores a modificar por el alumno
@@ -59,7 +60,6 @@
 
 // FLAGS FSM CONTROL DE SERPIENTE Y GESTION JUEGO
 // ATENCION: Valores a modificar por el alumno
-// DONE Añadir los flags
 #define FLAG_MOV_ARRIBA 0x00
 #define FLAG_MOV_ABAJO 0x00
 #define FLAG_MOV_DERECHA 0x01

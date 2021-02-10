@@ -29,6 +29,27 @@ void PintaMensajeInicialPantalla(tipo_pantalla *p_pantalla, tipo_pantalla *p_pan
 	return;
 }
 
+void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla)
+{
+#ifdef __SIN_PSEUDOWIRINGPI__
+	int i = 0, j = 0;
+
+	printf("\n[PANTALLA]\n");
+	fflush(stdout);
+	for (i = 0; i < NUM_FILAS_DISPLAY; i++)
+	{
+		for (j = 0; j < NUM_COLUMNAS_DISPLAY; j++)
+		{
+			printf("%d", p_pantalla->matriz[i][j]);
+			fflush(stdout);
+		}
+		printf("\n");
+		fflush(stdout);
+	}
+	fflush(stdout);
+#endif
+}
+
 void ReseteaPantalla(tipo_pantalla *p_pantalla)
 {
 	int i = 0, j = 0;
@@ -166,7 +187,7 @@ void PintaPelota(tipo_pelota *p_pelota, tipo_pantalla *p_pantalla)
 	}
 }
 
-void ActualizaPantalla(tipo_arkanoPi *p_arkanoPi, int debug)
+void ActualizaPantalla(tipo_arkanoPi *p_arkanoPi)
 {
 
 	// Borro toda la pantalla
@@ -186,19 +207,12 @@ void ActualizaPantalla(tipo_arkanoPi *p_arkanoPi, int debug)
 	PintaPelota(
 		(tipo_pelota *)(&(p_arkanoPi->pelota)),
 		(tipo_pantalla *)(p_arkanoPi->p_pantalla));
-
-	if (debug)
-	{
-		printf("\nDESPUES DE PintaPelota\n");
-		fflush(stdout);
-		PintaPantallaPorTerminal((tipo_pantalla *)(p_arkanoPi->p_pantalla));
-	}
 }
 
-void InicializaArkanoPi(tipo_arkanoPi *p_arkanoPi, int debug)
+void InicializaArkanoPi(tipo_arkanoPi *p_arkanoPi)
 {
 	ResetArkanoPi(p_arkanoPi);
-	ActualizaPantalla(p_arkanoPi, debug);
+	ActualizaPantalla(p_arkanoPi);
 }
 
 void ResetArkanoPi(tipo_arkanoPi *p_arkanoPi)
@@ -361,6 +375,7 @@ int CalculaLadrillosRestantes(tipo_pantalla *p_ladrillos)
 int CompruebaBotonPulsado(fsm_t *this)
 {
 	int result = 0;
+
 	// DONE A completar por el alumno
 	piLock(SYSTEM_FLAGS_KEY);
 	result = (flags & FLAG_BOTON);
@@ -384,6 +399,7 @@ int CompruebaMovimientoIzquierda(fsm_t *this)
 int CompruebaMovimientoDerecha(fsm_t *this)
 {
 	int result = 0;
+
 	// DONE A completar por el alumno
 	piLock(SYSTEM_FLAGS_KEY);
 	result = (flags & FLAG_MOV_DERECHA);
@@ -448,8 +464,11 @@ void MuevePalaIzquierda(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	// A completar por el alumno
-	// ...
+	// DONE A completar por el alumno
+	piLock(SYSTEM_FLAGS_KEY);
+	flags &= ~FLAG_BOTON;
+	flags &= ~FLAG_MOV_IZQUIERDA;
+	piUnlock(SYSTEM_FLAGS_KEY);
 }
 
 // void MuevePalaDerecha (void): función similar a la anterior
@@ -459,9 +478,12 @@ void MuevePalaDerecha(fsm_t *this)
 {
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
-	// TODO Sesión 2
-	// A completar por el alumno
-	// ...
+
+	// TODO A completar por el alumno
+	piLock(SYSTEM_FLAGS_KEY);
+	flags &= ~FLAG_BOTON;
+	flags &= ~FLAG_MOV_DERECHA;
+	piUnlock(SYSTEM_FLAGS_KEY);
 }
 
 // void ActualizarJuego (void): función encargada de actualizar la

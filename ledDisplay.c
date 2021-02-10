@@ -3,27 +3,25 @@
 
 tipo_pantalla pantalla_inicial = {
 	.matriz = {
-	{0,0,0,0,0,0,0},
-	{0,1,1,0,1,0,0},
-	{0,1,1,0,0,1,0},
-	{0,0,0,0,0,1,0},
-	{0,0,0,0,0,1,0},
-	{0,1,1,0,0,1,0},
-	{0,1,1,0,1,0,0},
-	{0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0},
+	{0,1,1,0,0,1,1,0},
+	{0,1,1,0,0,1,1,0},
+	{0,0,0,0,0,0,0,0},
+	{0,1,0,0,0,0,1,0},
+	{0,0,1,1,1,1,0,0},
+	{0,0,0,0,0,0,0,0},
 	}
 };
 
 tipo_pantalla pantalla_final = {
 	.matriz = {
-	{0,0,0,0,0,0,0},
-	{0,0,1,0,0,1,0},
-	{0,1,1,0,1,0,0},
-	{0,0,0,0,1,0,0},
-	{0,0,0,0,1,0,0},
-	{0,1,1,0,1,0,0},
-	{0,0,1,0,0,1,0},
-	{0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0},
+	{0,1,1,0,0,1,1,0},
+	{0,1,1,0,0,1,1,0},
+	{0,0,0,0,0,0,0,0},
+	{0,0,1,1,1,1,0,0},
+	{0,1,0,0,0,0,1,0},
+	{0,0,0,0,0,0,0,0},
 	}
 };
 
@@ -63,22 +61,6 @@ void ExcitaColumnas(int columna) {
 void ActualizaLedDisplay (TipoLedDisplay *led_display) {
 	// A completar por el alumno...
 	// ...
-}
-
-void PintaPantallaPorTerminal (tipo_pantalla *p_pantalla) {
-	int i=0, j=0;
-
-	printf("\n[PANTALLA]\n");
-	fflush(stdout);
-	for(j=0;j<NUM_FILAS_DISPLAY;j++) {
-		for(i=0;i<NUM_COLUMNAS_DISPLAY;i++) {
-			printf("%d", p_pantalla->matriz[i][j]);
-			fflush(stdout);
-		}
-		printf("\n");
-		fflush(stdout);
-	}
-	fflush(stdout);
 }
 
 //------------------------------------------------------

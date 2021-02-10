@@ -1,9 +1,7 @@
 
 #include "arkanoPi.h"
 
-// TODO Sesión 2
 int flags = 0;
-#define flag
 
 TipoSistema sistema;
 
@@ -91,7 +89,7 @@ PI_THREAD(thread_explora_teclado_PC)
 			piLock(SYSTEM_FLAGS_KEY);
 			switch (teclaPulsada)
 			{
-			// DONE A completar por el alumno...
+				// DONE A completar por el alumno...
 			case 'a':
 				flags |= FLAG_MOV_IZQUIERDA;
 				break;
@@ -112,7 +110,6 @@ PI_THREAD(thread_explora_teclado_PC)
 			}
 			piUnlock(SYSTEM_FLAGS_KEY);
 		}
-
 		piUnlock(STD_IO_BUFFER_KEY);
 	}
 }
