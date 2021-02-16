@@ -146,7 +146,6 @@ int main()
 	fsm_t *arkanoPi_fsm = fsm_new(WAIT_START, arkanoPi, &sistema);
 
 	// A completar por el alumno...
-	// ...
 
 	next = millis();
 	while (1)

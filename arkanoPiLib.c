@@ -375,7 +375,6 @@ int CalculaLadrillosRestantes(tipo_pantalla *p_ladrillos)
 int CompruebaBotonPulsado(fsm_t *this)
 {
 	int result = 0;
-
 	// DONE A completar por el alumno
 	piLock(SYSTEM_FLAGS_KEY);
 	result = (flags & FLAG_BOTON);
@@ -387,7 +386,6 @@ int CompruebaBotonPulsado(fsm_t *this)
 int CompruebaMovimientoIzquierda(fsm_t *this)
 {
 	int result = 0;
-
 	// DONE A completar por el alumno
 	piLock(SYSTEM_FLAGS_KEY);
 	result = (flags & FLAG_MOV_IZQUIERDA);
@@ -399,7 +397,6 @@ int CompruebaMovimientoIzquierda(fsm_t *this)
 int CompruebaMovimientoDerecha(fsm_t *this)
 {
 	int result = 0;
-
 	// DONE A completar por el alumno
 	piLock(SYSTEM_FLAGS_KEY);
 	result = (flags & FLAG_MOV_DERECHA);
@@ -447,7 +444,7 @@ void InicializaJuego(fsm_t *this)
 
 	// A completar por el alumno
 	// ...
-
+	InicializaArkanoPi(p_arkanoPi);
 	//pseudoWiringPiEnableDisplay(1);
 }
 
@@ -464,11 +461,14 @@ void MuevePalaIzquierda(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
+	printf("Izquierda\n");
 	// DONE A completar por el alumno
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_BOTON;
 	flags &= ~FLAG_MOV_IZQUIERDA;
 	piUnlock(SYSTEM_FLAGS_KEY);
+
+	ActualizaPosicionPala(&p_arkanoPi->pala, IZQUIERDA);
 }
 
 // void MuevePalaDerecha (void): función similar a la anterior
@@ -479,11 +479,14 @@ void MuevePalaDerecha(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
+	printf("Derecha\n");
 	// TODO A completar por el alumno
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_BOTON;
 	flags &= ~FLAG_MOV_DERECHA;
 	piUnlock(SYSTEM_FLAGS_KEY);
+
+	ActualizaPosicionPala(&p_arkanoPi->pala, DERECHA);
 }
 
 // void ActualizarJuego (void): función encargada de actualizar la
@@ -531,6 +534,7 @@ void ReseteaJuego(fsm_t *this)
 
 	// A completar por el alumno
 	// ...
+	InicializaArkanoPi(p_arkanoPi);
 }
 
 //------------------------------------------------------
