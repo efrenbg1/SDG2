@@ -464,7 +464,6 @@ void MuevePalaIzquierda(fsm_t *this)
 	printf("Izquierda\n");
 	// DONE A completar por el alumno
 	piLock(SYSTEM_FLAGS_KEY);
-	flags &= ~FLAG_BOTON;
 	flags &= ~FLAG_MOV_IZQUIERDA;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
@@ -482,7 +481,6 @@ void MuevePalaDerecha(fsm_t *this)
 	printf("Derecha\n");
 	// TODO A completar por el alumno
 	piLock(SYSTEM_FLAGS_KEY);
-	flags &= ~FLAG_BOTON;
 	flags &= ~FLAG_MOV_DERECHA;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
@@ -505,8 +503,13 @@ void ActualizarJuego(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	// A completar por el alumno
-	// ...
+	// DONE A completar por el alumno
+	printf("Refrescar\n");
+	piLock(SYSTEM_FLAGS_KEY);
+	flags &= ~FLAG_TIMER_JUEGO;
+	piUnlock(SYSTEM_FLAGS_KEY);
+
+	ActualizaPantalla(p_arkanoPi);
 }
 
 // void FinalJuego (void): función encargada de mostrar en la ventana de

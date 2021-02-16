@@ -54,8 +54,7 @@ TipoLedDisplay led_display = {
 int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 {
 	int result = 0;
-	// A completar por el alumno...
-	// ...
+	// TODO A completar por el alumno...
 
 	// Lanzamos thread para exploracion del teclado convencional del PC
 	result = piThreadCreate(thread_explora_teclado_PC);
@@ -94,6 +93,9 @@ PI_THREAD(thread_explora_teclado_PC)
 				flags |= FLAG_MOV_IZQUIERDA;
 				break;
 			case 'c':
+				flags |= FLAG_TIMER_JUEGO;
+				break;
+			case 'e':
 				flags |= FLAG_BOTON;
 				break;
 			case 'd':
