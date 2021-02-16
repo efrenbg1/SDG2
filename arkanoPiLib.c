@@ -16,6 +16,7 @@ int ladrillos_basico[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
 
 void PintaMensajeInicialPantalla(tipo_pantalla *p_pantalla, tipo_pantalla *p_pantalla_inicial)
 {
+	// TODO Esta función se tiene que llamar antes de empezar el juego para mostrar el mensaje de bienvenida
 	int i, j = 0;
 
 	for (i = 0; i < NUM_FILAS_DISPLAY; i++)
@@ -31,6 +32,7 @@ void PintaMensajeInicialPantalla(tipo_pantalla *p_pantalla, tipo_pantalla *p_pan
 
 void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla)
 {
+	// TODO llamar a esta función en vez de la otra de pintapantalla para depurar
 #ifdef __SIN_PSEUDOWIRINGPI__
 	int i = 0, j = 0;
 
@@ -189,7 +191,7 @@ void PintaPelota(tipo_pelota *p_pelota, tipo_pantalla *p_pantalla)
 
 void ActualizaPantalla(tipo_arkanoPi *p_arkanoPi)
 {
-
+	// TODO esta función tiene que ser llamada tras mover la pala o la pelota
 	// Borro toda la pantalla
 	ReseteaPantalla((tipo_pantalla *)(p_arkanoPi->p_pantalla));
 
@@ -442,6 +444,10 @@ void InicializaJuego(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
+	piLock(SYSTEM_FLAGS_KEY);
+	flags &= ~FLAG_BOTON;
+	piUnlock(SYSTEM_FLAGS_KEY);
+
 	// A completar por el alumno
 	// ...
 	InicializaArkanoPi(p_arkanoPi);
@@ -462,7 +468,7 @@ void MuevePalaIzquierda(fsm_t *this)
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
 	printf("Izquierda\n");
-	// DONE A completar por el alumno
+	// TODO Comprobar que la pala se pueda mover a la izquierda (uno de los leds tiene que estar visible)
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_MOV_IZQUIERDA;
 	piUnlock(SYSTEM_FLAGS_KEY);
@@ -479,7 +485,7 @@ void MuevePalaDerecha(fsm_t *this)
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
 	printf("Derecha\n");
-	// TODO A completar por el alumno
+	// TODO Comprobar que la pala se pueda mover a la derecha (uno de los leds tiene que estar visible)
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_MOV_DERECHA;
 	piUnlock(SYSTEM_FLAGS_KEY);
@@ -503,7 +509,7 @@ void ActualizarJuego(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	// DONE A completar por el alumno
+	// TODO Hacer lo que dice arriba ^
 	printf("Refrescar\n");
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_TIMER_JUEGO;
@@ -520,7 +526,7 @@ void FinalJuego(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	// A completar por el alumno
+	// TODO Mostrar stats del juego
 	// ...
 
 	//pseudoWiringPiEnableDisplay(0);
@@ -535,8 +541,8 @@ void ReseteaJuego(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	// A completar por el alumno
-	// ...
+	// TODO resetear los contadores del juego y la pantalla
+
 	InicializaArkanoPi(p_arkanoPi);
 }
 
