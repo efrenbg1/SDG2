@@ -32,7 +32,7 @@ void PintaMensajeInicialPantalla(tipo_pantalla *p_pantalla, tipo_pantalla *p_pan
 
 void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla)
 {
-	// TODO llamar a esta función en vez de la otra de pintapantalla para depurar
+	// DONE llamar a esta función en vez de la otra de pintapantalla para depurar
 #ifdef __SIN_PSEUDOWIRINGPI__
 	int i = 0, j = 0;
 
@@ -191,7 +191,7 @@ void PintaPelota(tipo_pelota *p_pelota, tipo_pantalla *p_pantalla)
 
 void ActualizaPantalla(tipo_arkanoPi *p_arkanoPi)
 {
-	// TODO esta función tiene que ser llamada tras mover la pala o la pelota
+	// DONE esta función tiene que ser llamada tras mover la pala o la pelota
 	// Borro toda la pantalla
 	ReseteaPantalla((tipo_pantalla *)(p_arkanoPi->p_pantalla));
 
@@ -467,7 +467,7 @@ void MuevePalaIzquierda(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	// TODO Comprobar que la pala se pueda mover a la izquierda (uno de los leds tiene que estar visible)
+	// DONE Comprobar que la pala se pueda mover a la izquierda (uno de los leds tiene que estar visible)
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_MOV_IZQUIERDA;
 	piUnlock(SYSTEM_FLAGS_KEY);
@@ -485,7 +485,7 @@ void MuevePalaDerecha(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	// TODO Comprobar que la pala se pueda mover a la derecha (uno de los leds tiene que estar visible)
+	// DONE Comprobar que la pala se pueda mover a la derecha (uno de los leds tiene que estar visible)
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_MOV_DERECHA;
 	piUnlock(SYSTEM_FLAGS_KEY);
@@ -515,20 +515,74 @@ void ActualizarJuego(fsm_t *this)
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_TIMER_JUEGO;
 	piUnlock(SYSTEM_FLAGS_KEY);
-
+	// TODO rebota mal con esquina de tres ladrillos
+	// 111
+	// 181
+	// 000
 	if (CompruebaReboteParedesVerticales(*p_arkanoPi))
 	{
 		p_arkanoPi->pelota.trayectoria.xv *= -1;
 	}
-	else if (CompruebaReboteTecho(*p_arkanoPi))
+
+	if (CompruebaReboteTecho(*p_arkanoPi))
 	{
 		p_arkanoPi->pelota.trayectoria.yv *= -1;
 	}
 	else if (CompruebaReboteLadrillo(p_arkanoPi))
 	{
+		ActualizaPosicionPelota(&p_arkanoPi->pelota);
+		p_arkanoPi->pelota.trayectoria.yv *= -1;
 	}
 	else if (CompruebaRebotePala(*p_arkanoPi))
 	{
+		int pelota = p_arkanoPi->pelota.x;
+		int pala = p_arkanoPi->pala.x + 1;
+		if (pelota < pala - 1)
+		{
+			p_arkanoPi->pelota.trayectoria.yv *= -1;
+			p_arkanoPi->pelota.trayectoria.xv *= -1;
+		}
+		else if (pelota == pala - 1)
+		{
+			if (p_arkanoPi->pelota.trayectoria.xv = 0)
+			{
+				p_arkanoPi->pelota.trayectoria.yv *= -1;
+				p_arkanoPi->pelota.trayectoria.xv = -1;
+			}
+			else
+			{
+				p_arkanoPi->pelota.trayectoria.yv *= -1;
+				p_arkanoPi->pelota.trayectoria.xv = 0;
+			}
+		}
+		else if (pelota == pala)
+		{
+			p_arkanoPi->pelota.trayectoria.yv *= -1;
+		}
+
+		else if (pelota == pala + 1)
+		{
+			if (p_arkanoPi->pelota.trayectoria.xv = 0)
+			{
+				p_arkanoPi->pelota.trayectoria.yv *= -1;
+				p_arkanoPi->pelota.trayectoria.xv = 1;
+			}
+			else
+			{
+				p_arkanoPi->pelota.trayectoria.yv *= -1;
+				p_arkanoPi->pelota.trayectoria.xv = 0;
+			}
+		}
+		else if (pelota > pala + 1)
+		{
+			p_arkanoPi->pelota.trayectoria.yv *= -1;
+			p_arkanoPi->pelota.trayectoria.xv *= -1;
+		}
+	}
+
+	if (CompruebaReboteParedesVerticales(*p_arkanoPi))
+	{
+		p_arkanoPi->pelota.trayectoria.xv *= -1;
 	}
 
 	ActualizaPosicionPelota(&p_arkanoPi->pelota);
