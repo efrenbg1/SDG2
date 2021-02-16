@@ -30,7 +30,7 @@ def paint():
             jj += 1
         p[jj][ii] = 0
     p[j][i] = 1
-    os.system('cls')
+    os.system('clear')
     for row in p:
         print(row)
 
