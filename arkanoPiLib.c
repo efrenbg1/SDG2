@@ -376,6 +376,7 @@ int CalculaLadrillosRestantes(tipo_pantalla *p_ladrillos)
 
 int CompruebaBotonPulsado(fsm_t *this)
 {
+	// comentario lool
 	int result = 0;
 	// DONE A completar por el alumno
 	piLock(SYSTEM_FLAGS_KEY);

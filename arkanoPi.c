@@ -139,7 +139,7 @@ int main()
 		{WAIT_END, CompruebaBotonPulsado, WAIT_START, ReseteaJuego},
 		{-1, NULL, -1, NULL},
 	};
-
+	
 	// Configuracion e incializacion del sistema
 	ConfiguraInicializaSistema(&sistema);
 
