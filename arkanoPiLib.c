@@ -449,7 +449,6 @@ void InicializaJuego(fsm_t *this)
 	piUnlock(SYSTEM_FLAGS_KEY);
 
 	// A completar por el alumno
-	// ...
 	InicializaArkanoPi(p_arkanoPi);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
 	//pseudoWiringPiEnableDisplay(1);
@@ -468,7 +467,6 @@ void MuevePalaIzquierda(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	printf("Izquierda\n");
 	// TODO Comprobar que la pala se pueda mover a la izquierda (uno de los leds tiene que estar visible)
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_MOV_IZQUIERDA;
@@ -487,7 +485,6 @@ void MuevePalaDerecha(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	printf("Derecha\n");
 	// TODO Comprobar que la pala se pueda mover a la derecha (uno de los leds tiene que estar visible)
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_MOV_DERECHA;
@@ -515,16 +512,28 @@ void ActualizarJuego(fsm_t *this)
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
 	// TODO Hacer lo que dice arriba ^
-	printf("Refrescar\n");
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_TIMER_JUEGO;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
-	
-	ActualizaPosicionPelota(&p_arkanoPi->p_pantalla);
+	if (CompruebaReboteParedesVerticales(*p_arkanoPi))
+	{
+		p_arkanoPi->pelota.trayectoria.xv *= -1;
+	}
+	else if (CompruebaReboteTecho(*p_arkanoPi))
+	{
+		p_arkanoPi->pelota.trayectoria.yv *= -1;
+	}
+	else if (CompruebaReboteLadrillo(p_arkanoPi))
+	{
+	}
+	else if (CompruebaRebotePala(*p_arkanoPi))
+	{
+	}
+
+	ActualizaPosicionPelota(&p_arkanoPi->pelota);
 	ActualizaPantalla(p_arkanoPi);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
-	
 }
 
 // void FinalJuego (void): función encargada de mostrar en la ventana de
