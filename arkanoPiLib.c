@@ -451,6 +451,7 @@ void InicializaJuego(fsm_t *this)
 	// A completar por el alumno
 	// ...
 	InicializaArkanoPi(p_arkanoPi);
+	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
 	//pseudoWiringPiEnableDisplay(1);
 }
 
@@ -474,6 +475,8 @@ void MuevePalaIzquierda(fsm_t *this)
 	piUnlock(SYSTEM_FLAGS_KEY);
 
 	ActualizaPosicionPala(&p_arkanoPi->pala, IZQUIERDA);
+	ActualizaPantalla(p_arkanoPi);
+	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
 }
 
 // void MuevePalaDerecha (void): función similar a la anterior
@@ -491,6 +494,8 @@ void MuevePalaDerecha(fsm_t *this)
 	piUnlock(SYSTEM_FLAGS_KEY);
 
 	ActualizaPosicionPala(&p_arkanoPi->pala, DERECHA);
+	ActualizaPantalla(p_arkanoPi);
+	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
 }
 
 // void ActualizarJuego (void): función encargada de actualizar la
@@ -515,7 +520,11 @@ void ActualizarJuego(fsm_t *this)
 	flags &= ~FLAG_TIMER_JUEGO;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
+	
+	ActualizaPosicionPelota(&p_arkanoPi->p_pantalla);
 	ActualizaPantalla(p_arkanoPi);
+	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
+	
 }
 
 // void FinalJuego (void): función encargada de mostrar en la ventana de
