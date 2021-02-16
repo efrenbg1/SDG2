@@ -376,7 +376,6 @@ int CalculaLadrillosRestantes(tipo_pantalla *p_ladrillos)
 
 int CompruebaBotonPulsado(fsm_t *this)
 {
-	// comentario lool
 	int result = 0;
 	// DONE A completar por el alumno
 	piLock(SYSTEM_FLAGS_KEY);
@@ -446,7 +445,7 @@ void InicializaJuego(fsm_t *this)
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
 	piLock(SYSTEM_FLAGS_KEY);
-	flags &= ~FLAG_BOTON;
+	flags = 0;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
 	// A completar por el alumno

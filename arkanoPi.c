@@ -54,8 +54,8 @@ TipoLedDisplay led_display = {
 int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 {
 	int result = 0;
-	// TODO inizializar HW (pantalla y teclado?)
-
+	// DONE inizializar HW (pantalla y teclado?)
+	p_sistema->arkanoPi.p_pantalla = &(led_display.pantalla);
 	// Lanzamos thread para exploracion del teclado convencional del PC
 	result = piThreadCreate(thread_explora_teclado_PC);
 
@@ -85,11 +85,12 @@ PI_THREAD(thread_explora_teclado_PC)
 		if (kbhit())
 		{
 			teclaPulsada = kbread();
+
+			// DONE A completar por el alumno...
 			piLock(SYSTEM_FLAGS_KEY);
 			flags |= FLAG_BOTON;
 			switch (teclaPulsada)
 			{
-				// DONE A completar por el alumno...
 			case 'a':
 				flags |= FLAG_MOV_IZQUIERDA;
 				break;
@@ -139,7 +140,7 @@ int main()
 		{WAIT_END, CompruebaBotonPulsado, WAIT_START, ReseteaJuego},
 		{-1, NULL, -1, NULL},
 	};
-	
+
 	// Configuracion e incializacion del sistema
 	ConfiguraInicializaSistema(&sistema);
 
