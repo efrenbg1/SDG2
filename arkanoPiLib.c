@@ -35,7 +35,9 @@ void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla)
 	// DONE llamar a esta función en vez de la otra de pintapantalla para depurar
 #ifdef __SIN_PSEUDOWIRINGPI__
 	int i = 0, j = 0;
-
+	// TODO Quitar o poner? (limpia la pantalla del terminal)
+	printf("\e[1;1H\e[2J");
+	fflush(stdout);
 	printf("\n[PANTALLA]\n");
 	fflush(stdout);
 	for (i = 0; i < NUM_FILAS_DISPLAY; i++)
@@ -374,6 +376,7 @@ int CalculaLadrillosRestantes(tipo_pantalla *p_ladrillos)
 // FUNCIONES DE TRANSICION DE LA MAQUINA DE ESTADOS
 //------------------------------------------------------
 
+int timeout = 1000;
 int CompruebaBotonPulsado(fsm_t *this)
 {
 	int result = 0;
@@ -382,6 +385,22 @@ int CompruebaBotonPulsado(fsm_t *this)
 	result = (flags & FLAG_BOTON);
 	piUnlock(SYSTEM_FLAGS_KEY);
 
+	if (timeout < 0)
+	{
+		timeout = 100;
+		tipo_arkanoPi *p_arkanoPi;
+		p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
+
+		piLock(STD_IO_BUFFER_KEY);
+
+		animar(p_arkanoPi->p_pantalla);
+		PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
+		printf("\nPusle cualquier tecla para empezar...\n");
+		fflush(stdout);
+
+		piUnlock(STD_IO_BUFFER_KEY);
+	}
+	timeout--;
 	return result;
 }
 
@@ -448,9 +467,11 @@ void InicializaJuego(fsm_t *this)
 	flags = 0;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
-	// A completar por el alumno
+	// DONE A completar por el alumno
+	piLock(STD_IO_BUFFER_KEY);
 	InicializaArkanoPi(p_arkanoPi);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
+	piUnlock(STD_IO_BUFFER_KEY);
 	//pseudoWiringPiEnableDisplay(1);
 }
 
@@ -472,9 +493,11 @@ void MuevePalaIzquierda(fsm_t *this)
 	flags &= ~FLAG_MOV_IZQUIERDA;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
+	piLock(STD_IO_BUFFER_KEY);
 	ActualizaPosicionPala(&p_arkanoPi->pala, IZQUIERDA);
 	ActualizaPantalla(p_arkanoPi);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
+	piUnlock(STD_IO_BUFFER_KEY);
 }
 
 // void MuevePalaDerecha (void): función similar a la anterior
@@ -490,9 +513,11 @@ void MuevePalaDerecha(fsm_t *this)
 	flags &= ~FLAG_MOV_DERECHA;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
+	piLock(STD_IO_BUFFER_KEY);
 	ActualizaPosicionPala(&p_arkanoPi->pala, DERECHA);
 	ActualizaPantalla(p_arkanoPi);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
+	piUnlock(STD_IO_BUFFER_KEY);
 }
 
 // void ActualizarJuego (void): función encargada de actualizar la
@@ -520,6 +545,8 @@ void ActualizarJuego(fsm_t *this)
 	// 111
 	// 181
 	// 000
+	piLock(STD_IO_BUFFER_KEY);
+
 	if (CompruebaReboteParedesVerticales(*p_arkanoPi))
 	{
 		p_arkanoPi->pelota.trayectoria.xv *= -1;
@@ -589,6 +616,8 @@ void ActualizarJuego(fsm_t *this)
 	ActualizaPosicionPelota(&p_arkanoPi->pelota);
 	ActualizaPantalla(p_arkanoPi);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
+
+	piUnlock(STD_IO_BUFFER_KEY);
 }
 
 // void FinalJuego (void): función encargada de mostrar en la ventana de

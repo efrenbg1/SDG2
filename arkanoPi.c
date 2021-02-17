@@ -58,7 +58,14 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 	p_sistema->arkanoPi.p_pantalla = &(led_display.pantalla);
 	// Lanzamos thread para exploracion del teclado convencional del PC
 	result = piThreadCreate(thread_explora_teclado_PC);
+	if (result != 0)
+	{
+		printf("Thread didn't start!!!\n");
+		return -1;
+	}
 
+	// TODO Descomentar para activar el timer basado en delay
+	//result = piThreadCreate(thread_timer);
 	if (result != 0)
 	{
 		printf("Thread didn't start!!!\n");
@@ -115,6 +122,17 @@ PI_THREAD(thread_explora_teclado_PC)
 	}
 }
 
+PI_THREAD(thread_timer)
+{
+	while (1)
+	{
+		delay(1000);
+		piLock(SYSTEM_FLAGS_KEY);
+		flags |= FLAG_TIMER_JUEGO;
+		piUnlock(SYSTEM_FLAGS_KEY);
+	}
+}
+
 // wait until next_activation (absolute time)
 void delay_until(unsigned int next)
 {
@@ -147,6 +165,13 @@ int main()
 	fsm_t *arkanoPi_fsm = fsm_new(WAIT_START, arkanoPi, &sistema);
 
 	// A completar por el alumno...
+	// DONE Poner mensaje de bienvenida
+	piLock(STD_IO_BUFFER_KEY);
+	PintaMensajeInicialPantalla(sistema.arkanoPi.p_pantalla, &pantalla_inicial);
+	PintaPantallaPorTerminal(sistema.arkanoPi.p_pantalla);
+	printf("\nPusle cualquier tecla para empezar...\n");
+	fflush(stdout);
+	piUnlock(STD_IO_BUFFER_KEY);
 
 	next = millis();
 	while (1)
