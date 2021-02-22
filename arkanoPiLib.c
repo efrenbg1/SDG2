@@ -36,8 +36,8 @@ void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla)
 #ifdef __SIN_PSEUDOWIRINGPI__
 	int i = 0, j = 0;
 	// TODO Quitar o poner? (limpia la pantalla del terminal)
-	printf("\e[1;1H\e[2J");
-	fflush(stdout);
+	//printf("\e[1;1H\e[2J");
+	//fflush(stdout);
 	printf("\n[PANTALLA]\n");
 	fflush(stdout);
 	for (i = 0; i < NUM_FILAS_DISPLAY; i++)
@@ -541,83 +541,8 @@ void ActualizarJuego(fsm_t *this)
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_TIMER_JUEGO;
 	piUnlock(SYSTEM_FLAGS_KEY);
-	// TODO rebota mal con esquina de tres ladrillos
-	// 111
-	// 181
-	// 000
-	piLock(STD_IO_BUFFER_KEY);
 
-	if (CompruebaReboteParedesVerticales(*p_arkanoPi))
-	{
-		p_arkanoPi->pelota.trayectoria.xv *= -1;
-	}
-
-	if (CompruebaReboteTecho(*p_arkanoPi))
-	{
-		p_arkanoPi->pelota.trayectoria.yv *= -1;
-	}
-	else if (CompruebaReboteLadrillo(p_arkanoPi))
-	{
-		ActualizaPosicionPelota(&p_arkanoPi->pelota);
-		p_arkanoPi->pelota.trayectoria.yv *= -1;
-	}
-	else if (CompruebaRebotePala(*p_arkanoPi))
-	{
-		int pelota = p_arkanoPi->pelota.x;
-		int pala = p_arkanoPi->pala.x + 1;
-		if (pelota < pala - 1)
-		{
-			p_arkanoPi->pelota.trayectoria.yv *= -1;
-			p_arkanoPi->pelota.trayectoria.xv *= -1;
-		}
-		else if (pelota == pala - 1)
-		{
-			if (p_arkanoPi->pelota.trayectoria.xv = 0)
-			{
-				p_arkanoPi->pelota.trayectoria.yv *= -1;
-				p_arkanoPi->pelota.trayectoria.xv = -1;
-			}
-			else
-			{
-				p_arkanoPi->pelota.trayectoria.yv *= -1;
-				p_arkanoPi->pelota.trayectoria.xv = 0;
-			}
-		}
-		else if (pelota == pala)
-		{
-			p_arkanoPi->pelota.trayectoria.yv *= -1;
-		}
-
-		else if (pelota == pala + 1)
-		{
-			if (p_arkanoPi->pelota.trayectoria.xv = 0)
-			{
-				p_arkanoPi->pelota.trayectoria.yv *= -1;
-				p_arkanoPi->pelota.trayectoria.xv = 1;
-			}
-			else
-			{
-				p_arkanoPi->pelota.trayectoria.yv *= -1;
-				p_arkanoPi->pelota.trayectoria.xv = 0;
-			}
-		}
-		else if (pelota > pala + 1)
-		{
-			p_arkanoPi->pelota.trayectoria.yv *= -1;
-			p_arkanoPi->pelota.trayectoria.xv *= -1;
-		}
-	}
-
-	if (CompruebaReboteParedesVerticales(*p_arkanoPi))
-	{
-		p_arkanoPi->pelota.trayectoria.xv *= -1;
-	}
-
-	ActualizaPosicionPelota(&p_arkanoPi->pelota);
-	ActualizaPantalla(p_arkanoPi);
-	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
-
-	piUnlock(STD_IO_BUFFER_KEY);
+	ActualizaPelota(p_arkanoPi);
 }
 
 // void FinalJuego (void): función encargada de mostrar en la ventana de
@@ -628,8 +553,10 @@ void FinalJuego(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	// TODO Mostrar stats del juego
-	// ...
+	piLock(STD_IO_BUFFER_KEY);
+	printf("\nJuego terminado\n");
+	fflush(stdout);
+	piUnlock(STD_IO_BUFFER_KEY);
 
 	//pseudoWiringPiEnableDisplay(0);
 }

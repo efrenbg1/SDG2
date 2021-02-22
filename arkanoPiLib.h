@@ -91,6 +91,7 @@ void PintaLadrillos(tipo_pantalla *p_ladrillos, tipo_pantalla *p_pantalla);
 void PintaPala(tipo_pala *p_pala, tipo_pantalla *p_pantalla);
 void PintaPelota(tipo_pelota *p_pelota, tipo_pantalla *p_pantalla);
 void ActualizaPantalla(tipo_arkanoPi *p_arkanoPi);
+void ActualizaPelota(tipo_arkanoPi *p_arkanoPi);
 
 //------------------------------------------------------
 // FUNCIONES DE TRANSICION DE LA MAQUINA DE ESTADOS
