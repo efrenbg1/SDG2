@@ -558,6 +558,10 @@ void FinalJuego(fsm_t *this)
 	fflush(stdout);
 	piUnlock(STD_IO_BUFFER_KEY);
 
+	piLock(SYSTEM_FLAGS_KEY);
+	flags = 0;
+	piUnlock(SYSTEM_FLAGS_KEY);
+
 	//pseudoWiringPiEnableDisplay(0);
 }
 
@@ -571,7 +575,6 @@ void ReseteaJuego(fsm_t *this)
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
 	// TODO resetear los contadores del juego y la pantalla
-
 	InicializaArkanoPi(p_arkanoPi);
 }
 

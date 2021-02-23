@@ -26,8 +26,11 @@ void ActualizaPelota(tipo_arkanoPi *p_arkanoPi)
     }
     else if (CompruebaReboteLadrillo(p_arkanoPi))
     {
-        ActualizaPosicionPelota(&p_arkanoPi->pelota);
+        //ActualizaPosicionPelota(&p_arkanoPi->pelota);
         p_arkanoPi->pelota.trayectoria.yv *= -1;
+        // TODO if(){
+
+        // }
     }
     else if (CompruebaRebotePala(*p_arkanoPi))
     {
@@ -40,7 +43,7 @@ void ActualizaPelota(tipo_arkanoPi *p_arkanoPi)
         }
         else if (pelota == pala - 1)
         {
-            if (p_arkanoPi->pelota.trayectoria.xv = 0)
+            if (p_arkanoPi->pelota.trayectoria.xv == 0)
             {
                 p_arkanoPi->pelota.trayectoria.yv *= -1;
                 p_arkanoPi->pelota.trayectoria.xv = -1;
@@ -55,10 +58,9 @@ void ActualizaPelota(tipo_arkanoPi *p_arkanoPi)
         {
             p_arkanoPi->pelota.trayectoria.yv *= -1;
         }
-
         else if (pelota == pala + 1)
         {
-            if (p_arkanoPi->pelota.trayectoria.xv = 0)
+            if (p_arkanoPi->pelota.trayectoria.xv == 0)
             {
                 p_arkanoPi->pelota.trayectoria.yv *= -1;
                 p_arkanoPi->pelota.trayectoria.xv = 1;

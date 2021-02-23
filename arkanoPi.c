@@ -65,7 +65,7 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 	}
 
 	// TODO Descomentar para activar el timer basado en delay
-	result = piThreadCreate(thread_timer);
+	//hresult = piThreadCreate(thread_timer);
 	if (result != 0)
 	{
 		printf("Thread didn't start!!!\n");
