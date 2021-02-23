@@ -1,11 +1,25 @@
 #include "animar.h"
 
+int timeout = 1000;
+
 // Cursores de la animación
 int fila = 0, columna = 0, direccion = 1, direccion2 = 1;
 int pantalla[7][8] = {0};
 
-void animar(tipo_pantalla *p_pantalla)
+void animarFinal()
 {
+    timeout = 10000;
+}
+
+int animar(tipo_pantalla *p_pantalla)
+{
+    if (timeout > 0)
+    {
+        timeout--;
+        return 0;
+    }
+    timeout = 100;
+
     pantalla[fila][columna] = direccion ? 1 : 0;
 
     columna += direccion2 ? 1 : -1;
@@ -38,4 +52,6 @@ void animar(tipo_pantalla *p_pantalla)
             p_pantalla->matriz[i][j] = pantalla[i][j];
         }
     }
+
+    return 1;
 }

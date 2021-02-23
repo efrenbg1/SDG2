@@ -10,28 +10,31 @@
 // ATENCION: Valor a modificar por el alumno
 #define TIMEOUT_COLUMNA_DISPLAY 60
 
-#define NUM_PINES_CONTROL_COLUMNAS_DISPLAY	3
-#define NUM_COLUMNAS_DISPLAY	8
-#define NUM_FILAS_DISPLAY		7
+#define NUM_PINES_CONTROL_COLUMNAS_DISPLAY 3
+#define NUM_COLUMNAS_DISPLAY 8
+#define NUM_FILAS_DISPLAY 7
 
 // FLAGS FSM CONTROL DE EXCITACION DISPLAY
 // ATENCION: Valores a modificar por el alumno
-#define FLAG_TIMEOUT_COLUMNA_DISPLAY 	0x00
+#define FLAG_TIMEOUT_COLUMNA_DISPLAY 0x00
 
-enum estados_excitacion_display_fsm {
+enum estados_excitacion_display_fsm
+{
 	DISPLAY_ESPERA_COLUMNA
 };
 
-typedef struct {
+typedef struct
+{
 	int matriz[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY];
 } tipo_pantalla;
 
-typedef struct {
+typedef struct
+{
 	int pines_control_columnas[NUM_PINES_CONTROL_COLUMNAS_DISPLAY]; // pines_control_columnas
 	int filas[NUM_FILAS_DISPLAY];
 	int p_columna;
 	tipo_pantalla pantalla;
-	tmr_t* tmr_refresco_display;
+	tmr_t *tmr_refresco_display;
 	int flags;
 } TipoLedDisplay;
 
@@ -44,32 +47,32 @@ extern fsm_trans_t fsm_trans_excitacion_display[];
 // PROCEDIMIENTOS DE INICIALIZACION DE LOS OBJETOS ESPECIFICOS
 //------------------------------------------------------
 
-void InicializaLedDisplay (TipoLedDisplay *led_display);
+void InicializaLedDisplay(TipoLedDisplay *led_display);
 
 //------------------------------------------------------
 // OTROS PROCEDIMIENTOS PROPIOS DE LA LIBRERIA
 //------------------------------------------------------
 
-void ApagaFilas (TipoLedDisplay *led_display);
-void ExcitaColumnas (int columna);
-void ActualizaLedDisplay (TipoLedDisplay *led_display);
+void ApagaFilas(TipoLedDisplay *led_display);
+void ExcitaColumnas(int columna);
+void ActualizaLedDisplay(TipoLedDisplay *led_display);
 
 //------------------------------------------------------
 // FUNCIONES DE ENTRADA O DE TRANSICION DE LA MAQUINA DE ESTADOS
 //------------------------------------------------------
 
-int CompruebaTimeoutColumnaDisplay (fsm_t* this);
+int CompruebaTimeoutColumnaDisplay(fsm_t *this);
 
 //------------------------------------------------------
 // FUNCIONES DE SALIDA O DE ACCION DE LA MAQUINA DE ESTADOS
 //------------------------------------------------------
 
-void ActualizaExcitacionDisplay (fsm_t* this);
+void ActualizaExcitacionDisplay(fsm_t *this);
 
 //------------------------------------------------------
 // SUBRUTINAS DE ATENCION A LAS INTERRUPCIONES
 //------------------------------------------------------
 
-void timer_refresco_display_isr (union sigval value);
+void timer_refresco_display_isr(union sigval value);
 
 #endif /* _LEDDISPLAY_H_ */

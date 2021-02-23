@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/time.h>
+// TODO cambiar pseudo por wiringPi
 //s#include <wiringPi.h>
 #include "pseudoWiringPi.h"
 

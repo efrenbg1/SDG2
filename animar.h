@@ -3,6 +3,7 @@
 
 #include "ledDisplay.h"
 
-void animar(tipo_pantalla *p_pantalla);
+int animar(tipo_pantalla *p_pantalla);
+void animarFinal();
 
 #endif

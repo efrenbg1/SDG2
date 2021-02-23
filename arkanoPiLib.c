@@ -88,6 +88,7 @@ void InicializaPelota(tipo_pelota *p_pelota)
 {
 	// Aleatorizamos la posicion inicial de la pelota
 	p_pelota->x = rand() % NUM_COLUMNAS_DISPLAY;
+	// TODO caso que pelota aparezca posicion pala (perdida automatica)
 	p_pelota->y = 2 + rand() % (NUM_FILAS_DISPLAY - 2); // 2 evita que aparezca encima de ladrillos y para que no empiece demasiado pegada al suelo de la pantalla
 
 	// Pelota inicialmente en el centro de la pantalla
@@ -376,7 +377,6 @@ int CalculaLadrillosRestantes(tipo_pantalla *p_ladrillos)
 // FUNCIONES DE TRANSICION DE LA MAQUINA DE ESTADOS
 //------------------------------------------------------
 
-int timeout = 1000;
 int CompruebaBotonPulsado(fsm_t *this)
 {
 	int result = 0;
@@ -385,22 +385,17 @@ int CompruebaBotonPulsado(fsm_t *this)
 	result = (flags & FLAG_BOTON);
 	piUnlock(SYSTEM_FLAGS_KEY);
 
-	if (timeout < 0)
+	tipo_arkanoPi *p_arkanoPi;
+	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
+	if (animar(p_arkanoPi->p_pantalla))
 	{
-		timeout = 100;
-		tipo_arkanoPi *p_arkanoPi;
-		p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
-
 		piLock(STD_IO_BUFFER_KEY);
-
-		animar(p_arkanoPi->p_pantalla);
 		PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
 		printf("\nPusle cualquier tecla para empezar...\n");
 		fflush(stdout);
-
 		piUnlock(STD_IO_BUFFER_KEY);
 	}
-	timeout--;
+
 	return result;
 }
 
@@ -561,6 +556,7 @@ void FinalJuego(fsm_t *this)
 	flags = 0;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
+	animarFinal();
 	//pseudoWiringPiEnableDisplay(0);
 }
 
