@@ -3,6 +3,7 @@
 void ActualizaPelota(tipo_arkanoPi *p_arkanoPi)
 {
 
+    // DONE Caso perder
     if (p_arkanoPi->pelota.y + p_arkanoPi->pelota.trayectoria.yv > 6)
     {
         piLock(SYSTEM_FLAGS_KEY);
@@ -10,7 +11,9 @@ void ActualizaPelota(tipo_arkanoPi *p_arkanoPi)
         piUnlock(SYSTEM_FLAGS_KEY);
         return;
     }
-    // TODO rebota mal con esquina de tres ladrillos
+    // TODO Caso ganar
+
+    // DONE rebota mal con esquina de tres ladrillos
     // 111
     // 181
     // 000

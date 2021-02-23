@@ -64,7 +64,6 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 		return -1;
 	}
 
-	// TODO Descomentar para activar el timer basado en delay
 	//hresult = piThreadCreate(thread_timer);
 	if (result != 0)
 	{

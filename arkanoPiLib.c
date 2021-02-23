@@ -16,7 +16,7 @@ int ladrillos_basico[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
 
 void PintaMensajeInicialPantalla(tipo_pantalla *p_pantalla, tipo_pantalla *p_pantalla_inicial)
 {
-	// TODO Esta función se tiene que llamar antes de empezar el juego para mostrar el mensaje de bienvenida
+	// DONE Esta función se tiene que llamar antes de empezar el juego para mostrar el mensaje de bienvenida
 	int i, j = 0;
 
 	for (i = 0; i < NUM_FILAS_DISPLAY; i++)
@@ -35,9 +35,9 @@ void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla)
 	// DONE llamar a esta función en vez de la otra de pintapantalla para depurar
 #ifdef __SIN_PSEUDOWIRINGPI__
 	int i = 0, j = 0;
-	// TODO Quitar o poner? (limpia la pantalla del terminal)
-	//printf("\e[1;1H\e[2J");
-	//fflush(stdout);
+	// DONE Quitar o poner? (limpia la pantalla del terminal)
+	printf("\e[1;1H\e[2J");
+	fflush(stdout);
 	printf("\n[PANTALLA]\n");
 	fflush(stdout);
 	for (i = 0; i < NUM_FILAS_DISPLAY; i++)
@@ -536,8 +536,7 @@ void ActualizarJuego(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	// TODO Hacer lo que dice arriba ^
-	// TODO Caso perder
+	// DONE Hacer lo que dice arriba ^
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_TIMER_JUEGO;
 	piUnlock(SYSTEM_FLAGS_KEY);
@@ -574,7 +573,7 @@ void ReseteaJuego(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	// TODO resetear los contadores del juego y la pantalla
+	// DONE resetear los contadores del juego y la pantalla
 	InicializaArkanoPi(p_arkanoPi);
 }
 
