@@ -64,13 +64,6 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 		return -1;
 	}
 
-	//hresult = piThreadCreate(thread_timer);
-	if (result != 0)
-	{
-		printf("Thread didn't start!!!\n");
-		return -1;
-	}
-
 	return result;
 }
 
@@ -121,17 +114,6 @@ PI_THREAD(thread_explora_teclado_PC)
 	}
 }
 
-PI_THREAD(thread_timer)
-{
-	while (1)
-	{
-		delay(1000);
-		piLock(SYSTEM_FLAGS_KEY);
-		flags |= FLAG_TIMER_JUEGO;
-		piUnlock(SYSTEM_FLAGS_KEY);
-	}
-}
-
 // wait until next_activation (absolute time)
 void delay_until(unsigned int next)
 {
@@ -140,6 +122,11 @@ void delay_until(unsigned int next)
 	{
 		delay(next - now);
 	}
+}
+
+void timer_isr(union sigval value)
+{
+	flags |= FLAG_TIMER_JUEGO;
 }
 
 int main()
@@ -160,6 +147,9 @@ int main()
 
 	// Configuracion e incializacion del sistema
 	ConfiguraInicializaSistema(&sistema);
+
+	tmr_t *tmr = tmr_new(timer_isr);
+	tmr_startms(tmr, 1000);
 
 	fsm_t *arkanoPi_fsm = fsm_new(WAIT_START, arkanoPi, &sistema);
 

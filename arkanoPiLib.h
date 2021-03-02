@@ -55,6 +55,7 @@ typedef struct
 	tipo_pantalla ladrillos;
 	tipo_pala pala;
 	tipo_pelota pelota;
+	tmr_t *tmr_actualizacion_juego;
 } tipo_arkanoPi;
 
 //------------------------------------------------------------------------

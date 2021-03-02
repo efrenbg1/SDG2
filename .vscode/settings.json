@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "arkanopilib.h": "c",
-        "animar.h": "c"
+        "animar.h": "c",
+        "arkanopi.h": "c"
     }
 }
