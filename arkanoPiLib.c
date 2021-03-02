@@ -44,7 +44,14 @@ void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla)
 	{
 		for (j = 0; j < NUM_COLUMNAS_DISPLAY; j++)
 		{
-			printf("%d", p_pantalla->matriz[i][j]);
+			if (p_pantalla->matriz[i][j] == 0)
+			{
+				printf(" ");
+			}
+			else
+			{
+				printf("%d", p_pantalla->matriz[i][j]);
+			}
 			fflush(stdout);
 		}
 		printf("\n");
@@ -468,6 +475,7 @@ void InicializaJuego(fsm_t *this)
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
 	piUnlock(STD_IO_BUFFER_KEY);
 	//pseudoWiringPiEnableDisplay(1);
+	EncenderTimer(p_arkanoPi);
 }
 
 // void MuevePalaIzquierda (void): funcion encargada de ejecutar
@@ -537,6 +545,7 @@ void ActualizarJuego(fsm_t *this)
 	piUnlock(SYSTEM_FLAGS_KEY);
 
 	ActualizaPelota(p_arkanoPi);
+	EncenderTimer(p_arkanoPi);
 }
 
 // void FinalJuego (void): función encargada de mostrar en la ventana de
@@ -547,8 +556,17 @@ void FinalJuego(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
+	ApagarTimer(p_arkanoPi);
+
 	piLock(STD_IO_BUFFER_KEY);
-	printf("\nJuego terminado\n");
+	if (CompruebaDerrota(p_arkanoPi))
+	{
+		printf("\nHas perdido\n");
+	}
+	else
+	{
+		printf("\nEres un champion\n");
+	}
 	fflush(stdout);
 	piUnlock(STD_IO_BUFFER_KEY);
 

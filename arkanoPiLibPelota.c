@@ -4,14 +4,14 @@ void ActualizaPelota(tipo_arkanoPi *p_arkanoPi)
 {
 
     // DONE Caso perder
-    if (p_arkanoPi->pelota.y + p_arkanoPi->pelota.trayectoria.yv > 6)
+    // DONE Caso ganar
+    if (CompruebaDerrota(p_arkanoPi) || CompruebaVictoria(p_arkanoPi))
     {
         piLock(SYSTEM_FLAGS_KEY);
         flags |= FLAG_FIN_JUEGO;
         piUnlock(SYSTEM_FLAGS_KEY);
         return;
     }
-    // TODO Caso ganar
 
     // DONE rebota mal con esquina de tres ladrillos
     // 111
@@ -29,11 +29,7 @@ void ActualizaPelota(tipo_arkanoPi *p_arkanoPi)
     }
     else if (CompruebaReboteLadrillo(p_arkanoPi))
     {
-        //ActualizaPosicionPelota(&p_arkanoPi->pelota);
         p_arkanoPi->pelota.trayectoria.yv *= -1;
-        // TODO if(){
-
-        // }
     }
     else if (CompruebaRebotePala(*p_arkanoPi))
     {
@@ -91,4 +87,24 @@ void ActualizaPelota(tipo_arkanoPi *p_arkanoPi)
     ActualizaPantalla(p_arkanoPi);
     PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
     piUnlock(STD_IO_BUFFER_KEY);
+}
+
+int CompruebaDerrota(tipo_arkanoPi *p_arkanoPi)
+{
+    return p_arkanoPi->pelota.y + p_arkanoPi->pelota.trayectoria.yv > 6;
+}
+
+int CompruebaVictoria(tipo_arkanoPi *p_arkanoPi)
+{
+    for (int i = 0; i < NUM_COLUMNAS_DISPLAY; i++)
+    {
+        for (int j = 0; j < NUM_FILAS_DISPLAY; j++)
+        {
+            if (p_arkanoPi->ladrillos.matriz[j][i] > 0)
+            {
+                return 0;
+            }
+        }
+    }
+    return 1;
 }

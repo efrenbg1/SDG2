@@ -56,6 +56,7 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 	int result = 0;
 	// DONE inizializar HW (pantalla y teclado?)
 	p_sistema->arkanoPi.p_pantalla = &(led_display.pantalla);
+
 	// Lanzamos thread para exploracion del teclado convencional del PC
 	result = piThreadCreate(thread_explora_teclado_PC);
 	if (result != 0)
@@ -124,11 +125,6 @@ void delay_until(unsigned int next)
 	}
 }
 
-void timer_isr(union sigval value)
-{
-	flags |= FLAG_TIMER_JUEGO;
-}
-
 int main()
 {
 	unsigned int next;
@@ -147,9 +143,6 @@ int main()
 
 	// Configuracion e incializacion del sistema
 	ConfiguraInicializaSistema(&sistema);
-
-	tmr_t *tmr = tmr_new(timer_isr);
-	tmr_startms(tmr, 1000);
 
 	fsm_t *arkanoPi_fsm = fsm_new(WAIT_START, arkanoPi, &sistema);
 

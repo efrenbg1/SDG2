@@ -37,8 +37,8 @@ void tmr_startms(tmr_t *this, int ms)
 {
     this->spec.it_value.tv_sec = ms / 1000;
     this->spec.it_value.tv_nsec = (ms % 1000) * 1000000;
-    this->spec.it_interval.tv_sec = ms / 1000;
-    this->spec.it_interval.tv_nsec = (ms % 1000) * 1000000;
+    this->spec.it_interval.tv_sec = 0;
+    this->spec.it_interval.tv_nsec = 0;
     timer_settime(this->timerid, 0, &(this->spec), NULL);
 }
 

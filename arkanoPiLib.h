@@ -82,6 +82,8 @@ int CompruebaReboteTecho(tipo_arkanoPi arkanoPi);
 int CompruebaRebotePala(tipo_arkanoPi arkanoPi);
 int CompruebaFallo(tipo_arkanoPi arkanoPi);
 int CalculaLadrillosRestantes(tipo_pantalla *p_ladrillos);
+int CompruebaVictoria(tipo_arkanoPi *p_arkanoPi);
+int CompruebaDerrota(tipo_arkanoPi *p_arkanoPi);
 
 //------------------------------------------------------
 // PROCEDIMIENTOS PARA LA VISUALIZACION DEL JUEGO
@@ -119,5 +121,7 @@ void ReseteaJuego(fsm_t *this);
 // SUBRUTINAS DE ATENCION A LAS INTERRUPCIONES
 //------------------------------------------------------
 void tmr_actualizacion_juego_isr(union sigval value);
+void EncenderTimer(tipo_arkanoPi *p_arkanoPi);
+void ApagarTimer(tipo_arkanoPi *p_arkanoPi);
 
 #endif /* _ARKANOPILIB_H_ */
