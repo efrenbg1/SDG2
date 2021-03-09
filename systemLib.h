@@ -22,7 +22,7 @@
 
 // ATENCION: Valores a modificar por el alumno
 // INTERVALO DE GUARDA ANTI-REBOTES
-#define DEBOUNCE_TIME 0
+#define DEBOUNCE_TIME 250
 #define TIMEOUT_ACTUALIZA_JUEGO 0
 
 // A 'key' which we can lock and unlock - values are 0 through 3
