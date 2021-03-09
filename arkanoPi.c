@@ -7,21 +7,11 @@ TipoSistema sistema;
 
 // Declaracion del objeto teclado
 TipoTeclado teclado = {
-	.columnas = {
-		// A completar por el alumno...
-		// ...
-	},
-	.filas = {
-		// A completar por el alumno...
-		// ...
-	},
-	.rutinas_ISR = {
-		// A completar por el alumno...
-		// ...
-	},
+	.columnas = {GPIO_KEYBOARD_COL_1, GPIO_KEYBOARD_COL_2, GPIO_KEYBOARD_COL_3, GPIO_KEYBOARD_COL_4},
+	.filas = {GPIO_KEYBOARD_ROW_1, GPIO_KEYBOARD_ROW_2, GPIO_KEYBOARD_ROW_3, GPIO_KEYBOARD_ROW_4},
+	.rutinas_ISR = {teclado_fila_1_isr, teclado_fila_2_isr, teclado_fila_3_isr, teclado_fila_4_isr},
 
-	// A completar por el alumno...
-	// ...
+	// TODO Falta algo aquí? (A completar por el alumno...)
 };
 
 // Declaracion del objeto display
@@ -55,15 +45,23 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 {
 	int result = 0;
 	// DONE inizializar HW (pantalla y teclado?)
+	wiringPiSetupGpio();
+	InicializaTeclado(&teclado);
 	p_sistema->arkanoPi.p_pantalla = &(led_display.pantalla);
 
 	// Lanzamos thread para exploracion del teclado convencional del PC
-	result = piThreadCreate(thread_explora_teclado_PC);
+	/*result = piThreadCreate(thread_explora_teclado_PC);
 	if (result != 0)
 	{
 		printf("Thread didn't start!!!\n");
 		return -1;
-	}
+	}*/
+	// DONE Inicializar timer asociado al teclado numérico
+	teclado.tmr_duracion_columna = tmr_new(timer_duracion_columna_isr);
+	tmr_startms((tmr_t *)(teclado.tmr_duracion_columna), TIMEOUT_COLUMNA_TECLADO);
+
+	// DONE Inicializar los gpio
+	// TODO hay que poner los pines extra que necesitamos para nuestro display (no usamos el convertor 3 a 8). Esto no va aquí pero en algún sitio lo tenía que poner
 
 	return result;
 }
@@ -129,6 +127,9 @@ int main()
 {
 	unsigned int next;
 
+	// Configuracion e incializacion del sistema
+	ConfiguraInicializaSistema(&sistema);
+
 	// Maquina de estados: lista de transiciones
 	// {EstadoOrigen, CondicionDeDisparo, EstadoFinal, AccionesSiTransicion }
 	fsm_trans_t arkanoPi[] = {
@@ -140,11 +141,13 @@ int main()
 		{WAIT_END, CompruebaBotonPulsado, WAIT_START, ReseteaJuego},
 		{-1, NULL, -1, NULL},
 	};
-
-	// Configuracion e incializacion del sistema
-	ConfiguraInicializaSistema(&sistema);
-
+	/*fsm_trans_t tabla_tecla[] = {
+		{TECLADO_ESPERA_TECLA, CompruebaTeclaPulsada,
+		 TECLADO_ESPERA_TECLA, ProcesaTeclaPulsada},
+		{-1, NULL, -1, NULL}};*/
 	fsm_t *arkanoPi_fsm = fsm_new(WAIT_START, arkanoPi, &sistema);
+	fsm_t *teclado_fsm = fsm_new(TECLADO_ESPERA_COLUMNA, fsm_trans_excitacion_columnas, &teclado);
+	fsm_t *tecla_fsm = fsm_new(TECLADO_ESPERA_TECLA, fsm_trans_deteccion_pulsaciones, &teclado);
 
 	// A completar por el alumno...
 	// DONE Poner mensaje de bienvenida
@@ -159,13 +162,14 @@ int main()
 	while (1)
 	{
 		fsm_fire(arkanoPi_fsm);
-
-		// A completar por el alumno...
-		// ...
+		fsm_fire(teclado_fsm);
+		fsm_fire(tecla_fsm);
 
 		next += CLK_MS;
 		delay_until(next);
 	}
 
 	fsm_destroy(arkanoPi_fsm);
+	fsm_destroy(teclado_fsm);
+	fsm_destroy(tecla_fsm);
 }

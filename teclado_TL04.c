@@ -4,64 +4,79 @@ char tecladoTL04[4][4] = {
 	{'1', '2', '3', 'C'},
 	{'4', '5', '6', 'D'},
 	{'7', '8', '9', 'E'},
-	{'A', '0', 'B', 'F'}
-};
+	{'A', '0', 'B', 'F'}};
 
 // Maquina de estados: lista de transiciones
 // {EstadoOrigen, CondicionDeDisparo, EstadoFinal, AccionesSiTransicion }
 fsm_trans_t fsm_trans_excitacion_columnas[] = {
-	{ TECLADO_ESPERA_COLUMNA, CompruebaTimeoutColumna, TECLADO_ESPERA_COLUMNA, TecladoExcitaColumna },
-	{-1, NULL, -1, NULL },
+	{TECLADO_ESPERA_COLUMNA, CompruebaTimeoutColumna, TECLADO_ESPERA_COLUMNA, TecladoExcitaColumna},
+	{-1, NULL, -1, NULL},
 };
 
 fsm_trans_t fsm_trans_deteccion_pulsaciones[] = {
-	{ TECLADO_ESPERA_TECLA, CompruebaTeclaPulsada, TECLADO_ESPERA_TECLA, ProcesaTeclaPulsada},
-	{-1, NULL, -1, NULL },
+	{TECLADO_ESPERA_TECLA, CompruebaTeclaPulsada, TECLADO_ESPERA_TECLA, ProcesaTeclaPulsada},
+	{-1, NULL, -1, NULL},
 };
 
 //------------------------------------------------------
 // PROCEDIMIENTOS DE INICIALIZACION DE LOS OBJETOS ESPECIFICOS
 //------------------------------------------------------
 
-void InicializaTeclado(TipoTeclado *p_teclado) {
-	// A completar por el alumno...
-	// ...
+void InicializaTeclado(TipoTeclado *p_teclado)
+{
+	// TODO inicializar los pines del teclado pongo ejemplo de lo que hay que llamar por cada pin:
+	for (int i = 0; i < NUM_COLUMNAS_TECLADO; i++)
+	{
+		pinMode(p_teclado->columnas[i], OUTPUT);
+	}
+	for (int i = 0; i < NUM_FILAS_TECLADO; i++)
+	{
+		pinMode(p_teclado->filas[i], INPUT);
+		pullUpDnControl(p_teclado->filas[i], PUD_DOWN);
+		wiringPiISR(p_teclado->filas[i], INT_EDGE_RISING, p_teclado->rutinas_ISR[i]);
+	}
 }
 
 //------------------------------------------------------
 // OTROS PROCEDIMIENTOS PROPIOS DE LA LIBRERIA
 //------------------------------------------------------
 
-void ActualizaExcitacionTecladoGPIO (int columna) {
+/*void ActualizaExcitacionTecladoGPIO(int columna)
+{
 	// A completar por el alumno
 	// ...
-	switch(columna){
+	switch (columna)
+	{
 		// ...
 	}
-}
+}*/
 
 //------------------------------------------------------
 // FUNCIONES DE ENTRADA O DE TRANSICION DE LA MAQUINA DE ESTADOS
 //------------------------------------------------------
 
-int CompruebaTimeoutColumna (fsm_t* this) {
+int CompruebaTimeoutColumna(fsm_t *this)
+{
 	int result = 0;
 	TipoTeclado *p_teclado;
-	p_teclado = (TipoTeclado*)(this->user_data);
+	p_teclado = (TipoTeclado *)(this->user_data);
 
-	// A completar por el alumno...
-	// ...
+	piLock(KEYBOARD_KEY);
+	result = (teclado.flags & FLAG_TIMEOUT_COLUMNA_TECLADO);
+	piUnlock(KEYBOARD_KEY);
 
 	return result;
 }
 
-int CompruebaTeclaPulsada (fsm_t* this) {
+int CompruebaTeclaPulsada(fsm_t *this)
+{
 	int result = 0;
 	TipoTeclado *p_teclado;
-	p_teclado = (TipoTeclado*)(this->user_data);
+	p_teclado = (TipoTeclado *)(this->user_data);
 
-	// A completar por el alumno
-	// ...
+	piLock(KEYBOARD_KEY);
+	result = (teclado.flags & FLAG_TECLA_PULSADA);
+	piUnlock(KEYBOARD_KEY);
 
 	return result;
 }
@@ -70,50 +85,136 @@ int CompruebaTeclaPulsada (fsm_t* this) {
 // FUNCIONES DE SALIDA O DE ACCION DE LAS MAQUINAS DE ESTADOS
 //------------------------------------------------------
 
-void TecladoExcitaColumna (fsm_t* this) {
+void TecladoExcitaColumna(fsm_t *this)
+{
 	TipoTeclado *p_teclado;
-	p_teclado = (TipoTeclado*)(this->user_data);
+	p_teclado = (TipoTeclado *)(this->user_data);
 
+	piLock(KEYBOARD_KEY);
+	teclado.flags &= ~FLAG_TIMEOUT_COLUMNA_TECLADO;
+
+	// DONE apagar la columna actual y excitar la siguiente
+	int actual = p_teclado->columna_actual;
+
+	digitalWrite(p_teclado->columnas[actual], LOW);
+	actual = actual < 3 ? actual + 1 : 0;
+	digitalWrite(p_teclado->columnas[actual], HIGH);
+
+	p_teclado->columna_actual = actual;
+
+	piUnlock(KEYBOARD_KEY);
+
+	tmr_startms((tmr_t *)(teclado.tmr_duracion_columna), TIMEOUT_COLUMNA_TECLADO);
 	// A completar por el alumno
 	// ...
 
 	// Llamada a ActualizaExcitacionTecladoGPIO con columna a activar como argumento
 }
 
-void ProcesaTeclaPulsada (fsm_t* this) {
+void ProcesaTeclaPulsada(fsm_t *this)
+{
 	TipoTeclado *p_teclado;
-	p_teclado = (TipoTeclado*)(this->user_data);
+	p_teclado = (TipoTeclado *)(this->user_data);
 
-	// A completar por el alumno
-	// ...
+	piLock(KEYBOARD_KEY);
+	teclado.flags &= ~FLAG_TECLA_PULSADA;
+	char tecla = tecladoTL04[teclado.teclaPulsada.row][teclado.teclaPulsada.col];
+	;
+	piUnlock(KEYBOARD_KEY);
+
+	piLock(SYSTEM_FLAGS_KEY);
+	flags |= FLAG_BOTON;
+	if (tecla == '4')
+	{
+		flags |= FLAG_MOV_IZQUIERDA;
+	}
+	if (tecla == '6')
+	{
+		flags |= FLAG_MOV_DERECHA;
+	}
+	piUnlock(SYSTEM_FLAGS_KEY);
 }
-
 
 //------------------------------------------------------
 // SUBRUTINAS DE ATENCION A LAS INTERRUPCIONES
 //------------------------------------------------------
 
-void teclado_fila_1_isr (void) {
-	// A completar por el alumno
-	// ...
+void teclado_fila_1_isr(void)
+{
+	piLock(KEYBOARD_KEY);
+
+	if (millis() < teclado.debounceTime[0])
+	{
+		teclado.debounceTime[0] = millis() + DEBOUNCE_TIME;
+	}
+	else
+	{
+		teclado.teclaPulsada.row = 0;
+		teclado.teclaPulsada.col = teclado.columna_actual;
+		teclado.flags |= FLAG_TECLA_PULSADA;
+	}
+
+	piUnlock(KEYBOARD_KEY);
 }
 
-void teclado_fila_2_isr (void) {
-	// A completar por el alumno
-	// ...
+void teclado_fila_2_isr(void)
+{
+	piLock(KEYBOARD_KEY);
+
+	if (millis() < teclado.debounceTime[1])
+	{
+		teclado.debounceTime[1] = millis() + DEBOUNCE_TIME;
+	}
+	else
+	{
+		teclado.teclaPulsada.row = 1;
+		teclado.teclaPulsada.col = teclado.columna_actual;
+		teclado.flags |= FLAG_TECLA_PULSADA;
+	}
+
+	piUnlock(KEYBOARD_KEY);
 }
 
-void teclado_fila_3_isr (void) {
-	// A completar por el alumno
-	// ...
+void teclado_fila_3_isr(void)
+{
+	piLock(KEYBOARD_KEY);
+
+	if (millis() < teclado.debounceTime[2])
+	{
+		teclado.debounceTime[2] = millis() + DEBOUNCE_TIME;
+	}
+	else
+	{
+		teclado.teclaPulsada.row = 2;
+		teclado.teclaPulsada.col = teclado.columna_actual;
+		teclado.flags |= FLAG_TECLA_PULSADA;
+	}
+
+	piUnlock(KEYBOARD_KEY);
 }
 
-void teclado_fila_4_isr (void) {
-	// A completar por el alumno
-	// ...
+void teclado_fila_4_isr(void)
+{
+	piLock(KEYBOARD_KEY);
+
+	if (millis() < teclado.debounceTime[3])
+	{
+		teclado.debounceTime[3] = millis() + DEBOUNCE_TIME;
+	}
+	else
+	{
+		teclado.teclaPulsada.row = 3;
+		teclado.teclaPulsada.col = teclado.columna_actual;
+		teclado.flags |= FLAG_TECLA_PULSADA;
+	}
+
+	piUnlock(KEYBOARD_KEY);
 }
 
-void timer_duracion_columna_isr (union sigval value) {
-	// A completar por el alumno
-	// ...
+void timer_duracion_columna_isr(union sigval value)
+{
+	// TODO actualizar flag para que la ISR del teclado cambia de columna
+	piLock(KEYBOARD_KEY);
+	teclado.flags |= FLAG_TIMEOUT_COLUMNA_TECLADO;
+	piUnlock(KEYBOARD_KEY);
 }
