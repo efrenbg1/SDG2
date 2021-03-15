@@ -3,8 +3,8 @@ import time
 
 gpio.setmode(gpio.BCM)
 
-x = [2, 3, 10, 9, 11, 14, 15, 8]
-y = [4, 17, 27, 22, 18, 23, 24, 25]
+x = [11, 5, 6, 13, 19, 26, 21, 20]
+y = [2, 3, 4, 17, 27, 22, 10, 9]
 
 m = [
     [1, 1, 1, 1, 1, 1, 1, 1],
@@ -19,28 +19,19 @@ m = [
 
 for pin in x:
     gpio.setup(pin, gpio.OUT)
-    gpio.output(pin, False)
+    gpio.output(pin, True)
 
 for pin in y:
     gpio.setup(pin, gpio.OUT)
     gpio.output(pin, True)
 
-def matrix(_x, _y):
-    if not m[_x][_y]:
-        return
-    gpio.output(x[_x], True)
-    gpio.output(y[_y], False)
-    time.sleep(0.004)
-    gpio.output(x[_x], False)
-    gpio.output(y[_y], True)
-
 while True:
-    for _x in range(0, 8):
-        gpio.output(x[_x], True)
-        for _y in range(0, 8):
-            if not m[_x][_y]:
-                continue
-            gpio.output(y[_y], False)
-            time.sleep(0.004/8)
-            gpio.output(y[_y], True)
-        gpio.output(x[_x], False)
+    for _y in range(0, 8):
+        gpio.output(y[_y], False)
+        for _x in range(0, 8):
+            if m[_x][_y]:
+                gpio.output(x[_x], True)
+            else:
+                gpio.output(x[_x], False)
+        time.sleep(0.001)
+        gpio.output(y[_y], True)

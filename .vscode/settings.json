@@ -2,6 +2,8 @@
     "files.associations": {
         "arkanopilib.h": "c",
         "animar.h": "c",
-        "arkanopi.h": "c"
+        "arkanopi.h": "c",
+        "leddisplay.h": "c",
+        "tmr.h": "c"
     }
 }

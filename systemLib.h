@@ -10,8 +10,8 @@
 #include <unistd.h>
 #include <sys/time.h>
 // TODO cambiar pseudo por wiringPi
-//s#include <wiringPi.h>
-#include "pseudoWiringPi.h"
+#include <wiringPi.h>
+//#include "pseudoWiringPi.h"
 
 #include "kbhit.h" // para poder detectar teclas pulsadas sin bloqueo y leer las teclas pulsadas
 #include "fsm.h"
@@ -38,26 +38,40 @@
 
 // Distribucion de pines GPIO empleada para el teclado y el display
 // ATENCION: Valores a modificar por el alumno
-#define GPIO_KEYBOARD_COL_1 0
+// Valores antiguos comentados
+/*#define GPIO_KEYBOARD_COL_1 0
 #define GPIO_KEYBOARD_COL_2 1
 #define GPIO_KEYBOARD_COL_3 2
 #define GPIO_KEYBOARD_COL_4 3
 #define GPIO_KEYBOARD_ROW_1 5
 #define GPIO_KEYBOARD_ROW_2 6
 #define GPIO_KEYBOARD_ROW_3 12
-#define GPIO_KEYBOARD_ROW_4 13
+#define GPIO_KEYBOARD_ROW_4 13*/
+#define GPIO_KEYBOARD_COL_1 15
+#define GPIO_KEYBOARD_COL_2 16
+#define GPIO_KEYBOARD_COL_3 1
+#define GPIO_KEYBOARD_COL_4 4
+#define GPIO_KEYBOARD_ROW_1 5
+#define GPIO_KEYBOARD_ROW_2 6
+#define GPIO_KEYBOARD_ROW_3 10
+#define GPIO_KEYBOARD_ROW_4 11
 
-#define GPIO_LED_DISPLAY_COL_1 11
-#define GPIO_LED_DISPLAY_COL_2 14
-#define GPIO_LED_DISPLAY_COL_3 17
-#define GPIO_LED_DISPLAY_COL_4 18
-#define GPIO_LED_DISPLAY_ROW_1 4
-#define GPIO_LED_DISPLAY_ROW_2 7
-#define GPIO_LED_DISPLAY_ROW_3 8
-#define GPIO_LED_DISPLAY_ROW_4 10
-#define GPIO_LED_DISPLAY_ROW_5 22
-#define GPIO_LED_DISPLAY_ROW_6 23
-#define GPIO_LED_DISPLAY_ROW_7 24
+#define GPIO_LED_DISPLAY_COL_1 13
+#define GPIO_LED_DISPLAY_COL_2 12
+#define GPIO_LED_DISPLAY_COL_3 3
+#define GPIO_LED_DISPLAY_COL_4 2
+#define GPIO_LED_DISPLAY_COL_5 0
+#define GPIO_LED_DISPLAY_COL_6 7
+#define GPIO_LED_DISPLAY_COL_7 9
+#define GPIO_LED_DISPLAY_COL_8 8
+#define GPIO_LED_DISPLAY_ROW_1 14
+#define GPIO_LED_DISPLAY_ROW_2 30
+#define GPIO_LED_DISPLAY_ROW_3 21
+#define GPIO_LED_DISPLAY_ROW_4 22
+#define GPIO_LED_DISPLAY_ROW_5 23
+#define GPIO_LED_DISPLAY_ROW_6 24
+#define GPIO_LED_DISPLAY_ROW_7 25
+#define GPIO_LED_DISPLAY_ROW_8 29
 
 // FLAGS FSM CONTROL DE SERPIENTE Y GESTION JUEGO
 // ATENCION: Valores a modificar por el alumno

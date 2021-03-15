@@ -17,15 +17,10 @@ TipoTeclado teclado = {
 // Declaracion del objeto display
 TipoLedDisplay led_display = {
 	.pines_control_columnas = {
-		// A completar por el alumno...
-		// ...
-	},
-	.filas = {
-		// A completar por el alumno...
-		// ...
-	},
-	// A completar por el alumno...
-	// ...
+		GPIO_LED_DISPLAY_COL_1, GPIO_LED_DISPLAY_COL_2, GPIO_LED_DISPLAY_COL_3, GPIO_LED_DISPLAY_COL_4, GPIO_LED_DISPLAY_COL_5, GPIO_LED_DISPLAY_COL_6, GPIO_LED_DISPLAY_COL_7, GPIO_LED_DISPLAY_COL_8},
+	.filas = {GPIO_LED_DISPLAY_ROW_1, GPIO_LED_DISPLAY_ROW_2, GPIO_LED_DISPLAY_ROW_3, GPIO_LED_DISPLAY_ROW_4, GPIO_LED_DISPLAY_ROW_5, GPIO_LED_DISPLAY_ROW_6, GPIO_LED_DISPLAY_ROW_7},
+
+	// TODO Falta algo aquí? (A completar por el alumno...)
 };
 
 //------------------------------------------------------
@@ -45,8 +40,9 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 {
 	int result = 0;
 	// DONE inizializar HW (pantalla y teclado?)
-	wiringPiSetupGpio();
-	InicializaTeclado(&teclado);
+	wiringPiSetup();
+	//InicializaTeclado(&teclado);
+	InicializaLedDisplay(&led_display);
 	p_sistema->arkanoPi.p_pantalla = &(led_display.pantalla);
 
 	// Lanzamos thread para exploracion del teclado convencional del PC
@@ -57,8 +53,11 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 		return -1;
 	}*/
 	// DONE Inicializar timer asociado al teclado numérico
-	teclado.tmr_duracion_columna = tmr_new(timer_duracion_columna_isr);
-	tmr_startms((tmr_t *)(teclado.tmr_duracion_columna), TIMEOUT_COLUMNA_TECLADO);
+	/*teclado.tmr_duracion_columna = tmr_new(timer_duracion_columna_isr);
+	tmr_startms((tmr_t *)(teclado.tmr_duracion_columna), TIMEOUT_COLUMNA_TECLADO);*/
+
+	led_display.tmr_refresco_display = tmr_new(timer_refresco_display_isr);
+	tmr_startms((tmr_t *)(led_display.tmr_refresco_display), TIMEOUT_COLUMNA_DISPLAY);
 
 	// DONE Inicializar los gpio
 	// TODO hay que poner los pines extra que necesitamos para nuestro display (no usamos el convertor 3 a 8). Esto no va aquí pero en algún sitio lo tenía que poner
@@ -148,6 +147,7 @@ int main()
 	fsm_t *arkanoPi_fsm = fsm_new(WAIT_START, arkanoPi, &sistema);
 	fsm_t *teclado_fsm = fsm_new(TECLADO_ESPERA_COLUMNA, fsm_trans_excitacion_columnas, &teclado);
 	fsm_t *tecla_fsm = fsm_new(TECLADO_ESPERA_TECLA, fsm_trans_deteccion_pulsaciones, &teclado);
+	fsm_t *display_fsm = fsm_new(DISPLAY_ESPERA_COLUMNA, fsm_trans_excitacion_display, &led_display);
 
 	// A completar por el alumno...
 	// DONE Poner mensaje de bienvenida
@@ -161,9 +161,11 @@ int main()
 	next = millis();
 	while (1)
 	{
+		fsm_fire(display_fsm);
 		fsm_fire(arkanoPi_fsm);
 		fsm_fire(teclado_fsm);
 		fsm_fire(tecla_fsm);
+		fsm_fire(display_fsm);
 
 		next += CLK_MS;
 		delay_until(next);
@@ -172,4 +174,5 @@ int main()
 	fsm_destroy(arkanoPi_fsm);
 	fsm_destroy(teclado_fsm);
 	fsm_destroy(tecla_fsm);
+	fsm_destroy(display_fsm);
 }
