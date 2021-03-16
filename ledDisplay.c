@@ -116,13 +116,15 @@ void ActualizaExcitacionDisplay(fsm_t *this)
 	// Apagar columna previa
 	int actual = p_ledDisplay->p_columna;
 	digitalWrite(p_ledDisplay->pines_control_columnas[actual], HIGH);
+
+	// Actualizar columna
 	actual = actual < (NUM_COLUMNAS_DISPLAY - 1) ? actual + 1 : 0;
 	p_ledDisplay->p_columna = actual;
 
 	// Filas
 	for (int i = 0; i < NUM_FILAS_DISPLAY; i++)
 	{
-		if (pantalla_inicial.matriz[i][actual])
+		if (p_ledDisplay->pantalla.matriz[i][actual])
 		{
 			digitalWrite(p_ledDisplay->filas[i], HIGH);
 		}
