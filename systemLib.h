@@ -9,7 +9,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/time.h>
-// TODO cambiar pseudo por wiringPi
+// DONE cambiar pseudo por wiringPi
 #include <wiringPi.h>
 //#include "pseudoWiringPi.h"
 
@@ -23,7 +23,7 @@
 // ATENCION: Valores a modificar por el alumno
 // INTERVALO DE GUARDA ANTI-REBOTES
 #define DEBOUNCE_TIME 250
-#define TIMEOUT_ACTUALIZA_JUEGO 0
+#define TIMEOUT_ACTUALIZA_JUEGO 1000
 
 // A 'key' which we can lock and unlock - values are 0 through 3
 //	This is interpreted internally as a pthread_mutex by wiringPi

@@ -1,10 +1,11 @@
 #include "teclado_TL04.h"
 
+// DONE cambiar posición teclas al teclado físico que tenemos
 char tecladoTL04[4][4] = {
-	{'1', '2', '3', 'C'},
-	{'4', '5', '6', 'D'},
-	{'7', '8', '9', 'E'},
-	{'A', '0', 'B', 'F'}};
+	{'1', '2', '3', 'A'},
+	{'4', '5', '6', 'B'},
+	{'7', '8', '9', 'C'},
+	{'*', '0', '#', 'D'}};
 
 // Maquina de estados: lista de transiciones
 // {EstadoOrigen, CondicionDeDisparo, EstadoFinal, AccionesSiTransicion }
@@ -24,7 +25,7 @@ fsm_trans_t fsm_trans_deteccion_pulsaciones[] = {
 
 void InicializaTeclado(TipoTeclado *p_teclado)
 {
-	// TODO inicializar los pines del teclado pongo ejemplo de lo que hay que llamar por cada pin:
+	// DONE inicializar los pines del teclado pongo ejemplo de lo que hay que llamar por cada pin:
 	for (int i = 0; i < NUM_COLUMNAS_TECLADO; i++)
 	{
 		pinMode(p_teclado->columnas[i], OUTPUT);
@@ -36,20 +37,6 @@ void InicializaTeclado(TipoTeclado *p_teclado)
 		wiringPiISR(p_teclado->filas[i], INT_EDGE_RISING, p_teclado->rutinas_ISR[i]);
 	}
 }
-
-//------------------------------------------------------
-// OTROS PROCEDIMIENTOS PROPIOS DE LA LIBRERIA
-//------------------------------------------------------
-
-/*void ActualizaExcitacionTecladoGPIO(int columna)
-{
-	// A completar por el alumno
-	// ...
-	switch (columna)
-	{
-		// ...
-	}
-}*/
 
 //------------------------------------------------------
 // FUNCIONES DE ENTRADA O DE TRANSICION DE LA MAQUINA DE ESTADOS
@@ -145,14 +132,15 @@ void teclado_fila_1_isr(void)
 
 	if (millis() < teclado.debounceTime[0])
 	{
-		teclado.debounceTime[0] = millis() + DEBOUNCE_TIME;
+		piUnlock(KEYBOARD_KEY);
+		return;
 	}
-	else
-	{
-		teclado.teclaPulsada.row = 0;
-		teclado.teclaPulsada.col = teclado.columna_actual;
-		teclado.flags |= FLAG_TECLA_PULSADA;
-	}
+
+	teclado.teclaPulsada.row = 0;
+	teclado.teclaPulsada.col = teclado.columna_actual;
+	teclado.flags |= FLAG_TECLA_PULSADA;
+
+	teclado.debounceTime[0] = millis() + DEBOUNCE_TIME;
 
 	piUnlock(KEYBOARD_KEY);
 }
@@ -163,14 +151,15 @@ void teclado_fila_2_isr(void)
 
 	if (millis() < teclado.debounceTime[1])
 	{
-		teclado.debounceTime[1] = millis() + DEBOUNCE_TIME;
+		piUnlock(KEYBOARD_KEY);
+		return;
 	}
-	else
-	{
-		teclado.teclaPulsada.row = 1;
-		teclado.teclaPulsada.col = teclado.columna_actual;
-		teclado.flags |= FLAG_TECLA_PULSADA;
-	}
+
+	teclado.teclaPulsada.row = 1;
+	teclado.teclaPulsada.col = teclado.columna_actual;
+	teclado.flags |= FLAG_TECLA_PULSADA;
+
+	teclado.debounceTime[1] = millis() + DEBOUNCE_TIME;
 
 	piUnlock(KEYBOARD_KEY);
 }
@@ -181,14 +170,15 @@ void teclado_fila_3_isr(void)
 
 	if (millis() < teclado.debounceTime[2])
 	{
-		teclado.debounceTime[2] = millis() + DEBOUNCE_TIME;
+		piUnlock(KEYBOARD_KEY);
+		return;
 	}
-	else
-	{
-		teclado.teclaPulsada.row = 2;
-		teclado.teclaPulsada.col = teclado.columna_actual;
-		teclado.flags |= FLAG_TECLA_PULSADA;
-	}
+
+	teclado.teclaPulsada.row = 2;
+	teclado.teclaPulsada.col = teclado.columna_actual;
+	teclado.flags |= FLAG_TECLA_PULSADA;
+
+	teclado.debounceTime[2] = millis() + DEBOUNCE_TIME;
 
 	piUnlock(KEYBOARD_KEY);
 }
@@ -199,21 +189,22 @@ void teclado_fila_4_isr(void)
 
 	if (millis() < teclado.debounceTime[3])
 	{
-		teclado.debounceTime[3] = millis() + DEBOUNCE_TIME;
+		piUnlock(KEYBOARD_KEY);
+		return;
 	}
-	else
-	{
-		teclado.teclaPulsada.row = 3;
-		teclado.teclaPulsada.col = teclado.columna_actual;
-		teclado.flags |= FLAG_TECLA_PULSADA;
-	}
+
+	teclado.teclaPulsada.row = 3;
+	teclado.teclaPulsada.col = teclado.columna_actual;
+	teclado.flags |= FLAG_TECLA_PULSADA;
+
+	teclado.debounceTime[3] = millis() + DEBOUNCE_TIME;
 
 	piUnlock(KEYBOARD_KEY);
 }
 
 void timer_duracion_columna_isr(union sigval value)
 {
-	// TODO actualizar flag para que la ISR del teclado cambia de columna
+	// DONE actualizar flag para que la ISR del teclado cambia de columna
 	piLock(KEYBOARD_KEY);
 	teclado.flags |= FLAG_TIMEOUT_COLUMNA_TECLADO;
 	piUnlock(KEYBOARD_KEY);

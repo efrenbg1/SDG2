@@ -1,3 +1,8 @@
+/*
+ * Como añadido, el display muestra una animación mientras espera a que el usuario pulse la tecla para empezar.
+ * El código encargado de la animación está implementado aquí.
+ */
+
 #include "animar.h"
 
 int timeout = 1000;

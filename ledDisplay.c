@@ -1,3 +1,4 @@
+// DONE hay que poner los pines extra que necesitamos para nuestro display (no usamos el convertor 3 a 8). 16 cables para manejar el display
 
 #include "ledDisplay.h"
 
@@ -52,39 +53,11 @@ void InicializaLedDisplay(TipoLedDisplay *led_display)
 }
 
 //------------------------------------------------------
-// OTROS PROCEDIMIENTOS PROPIOS DE LA LIBRERIA
-//------------------------------------------------------
-
-void ApagaFilas(TipoLedDisplay *led_display)
-{
-	// A completar por el alumno...
-	// ...
-}
-
-void ExcitaColumnas(int columna)
-{
-
-	switch (columna)
-	{
-		// A completar por el alumno...
-		// ...
-	}
-}
-
-void ActualizaLedDisplay(TipoLedDisplay *led_display)
-{
-	// A completar por el alumno...
-	// ...
-}
-
-//------------------------------------------------------
 // FUNCIONES DE ENTRADA O DE TRANSICION DE LA MAQUINA DE ESTADOS
 //------------------------------------------------------
 
 int CompruebaTimeoutColumnaDisplay(fsm_t *this)
 {
-	return 1;
-
 	int result = 0;
 	TipoLedDisplay *p_ledDisplay;
 	p_ledDisplay = (TipoLedDisplay *)(this->user_data);
@@ -106,7 +79,7 @@ void ActualizaExcitacionDisplay(fsm_t *this)
 	p_ledDisplay = (TipoLedDisplay *)(this->user_data);
 
 	// Reiniciar TIMER
-	//tmr_startms((tmr_t *)(p_ledDisplay->tmr_refresco_display), TIMEOUT_COLUMNA_DISPLAY);
+	tmr_startms((tmr_t *)(p_ledDisplay->tmr_refresco_display), TIMEOUT_COLUMNA_DISPLAY);
 
 	piLock(MATRIX_KEY);
 

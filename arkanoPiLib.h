@@ -121,7 +121,5 @@ void ReseteaJuego(fsm_t *this);
 // SUBRUTINAS DE ATENCION A LAS INTERRUPCIONES
 //------------------------------------------------------
 void tmr_actualizacion_juego_isr(union sigval value);
-void EncenderTimer(tipo_arkanoPi *p_arkanoPi);
-void ApagarTimer(tipo_arkanoPi *p_arkanoPi);
 
 #endif /* _ARKANOPILIB_H_ */

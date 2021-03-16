@@ -1,3 +1,7 @@
+/*
+ * Aquí reside la implementación de los diferentes rebotes de la pelota.
+ */
+
 #include "arkanoPiLib.h"
 
 void ActualizaPelota(tipo_arkanoPi *p_arkanoPi)

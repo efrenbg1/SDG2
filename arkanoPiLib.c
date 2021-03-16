@@ -44,6 +44,7 @@ void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla)
 	{
 		for (j = 0; j < NUM_COLUMNAS_DISPLAY; j++)
 		{
+			// DONE Quitar los ceros para que el terminal quede más limpio
 			if (p_pantalla->matriz[i][j] == 0)
 			{
 				printf(" ");
@@ -474,7 +475,8 @@ void InicializaJuego(fsm_t *this)
 	InicializaArkanoPi(p_arkanoPi);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
 	piUnlock(STD_IO_BUFFER_KEY);
-	EncenderTimer(p_arkanoPi);
+
+	tmr_startms((tmr_t *)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
 }
 
 // void MuevePalaIzquierda (void): funcion encargada de ejecutar
@@ -544,7 +546,7 @@ void ActualizarJuego(fsm_t *this)
 	piUnlock(SYSTEM_FLAGS_KEY);
 
 	ActualizaPelota(p_arkanoPi);
-	EncenderTimer(p_arkanoPi);
+	tmr_startms((tmr_t *)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
 }
 
 // void FinalJuego (void): función encargada de mostrar en la ventana de
@@ -555,18 +557,24 @@ void FinalJuego(fsm_t *this)
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 
-	ApagarTimer(p_arkanoPi);
+	tmr_stop(p_arkanoPi->tmr_actualizacion_juego);
+	p_arkanoPi->tmr_actualizacion_juego = tmr_new(tmr_actualizacion_juego_isr);
 
 	piLock(STD_IO_BUFFER_KEY);
 	if (CompruebaDerrota(p_arkanoPi))
 	{
-		printf("\nHas perdido\n");
+		PintaMensajeInicialPantalla(p_arkanoPi->p_pantalla, &pantalla_final);
+		//printf("\nHas perdido\n");
+		//fflush(stdout);
 	}
 	else
 	{
-		printf("\nEres un champion\n");
+		PintaMensajeInicialPantalla(p_arkanoPi->p_pantalla, &pantalla_inicial);
+		//printf("\nEres un champion\n");
+		//fflush(stdout);
 	}
-	fflush(stdout);
+
+	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
 	piUnlock(STD_IO_BUFFER_KEY);
 
 	piLock(SYSTEM_FLAGS_KEY);
@@ -595,6 +603,7 @@ void ReseteaJuego(fsm_t *this)
 
 void tmr_actualizacion_juego_isr(union sigval value)
 {
-	// A completar por el alumno
-	// ...
+	piLock(SYSTEM_FLAGS_KEY);
+	flags |= FLAG_TIMER_JUEGO;
+	piUnlock(SYSTEM_FLAGS_KEY);
 }

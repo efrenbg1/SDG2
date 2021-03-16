@@ -11,7 +11,7 @@ TipoTeclado teclado = {
 	.filas = {GPIO_KEYBOARD_ROW_1, GPIO_KEYBOARD_ROW_2, GPIO_KEYBOARD_ROW_3, GPIO_KEYBOARD_ROW_4},
 	.rutinas_ISR = {teclado_fila_1_isr, teclado_fila_2_isr, teclado_fila_3_isr, teclado_fila_4_isr},
 
-	// TODO Falta algo aquí? (A completar por el alumno...)
+	// DONE Falta algo aquí? (A completar por el alumno...)
 };
 
 // Declaracion del objeto display
@@ -20,7 +20,7 @@ TipoLedDisplay led_display = {
 		GPIO_LED_DISPLAY_COL_1, GPIO_LED_DISPLAY_COL_2, GPIO_LED_DISPLAY_COL_3, GPIO_LED_DISPLAY_COL_4, GPIO_LED_DISPLAY_COL_5, GPIO_LED_DISPLAY_COL_6, GPIO_LED_DISPLAY_COL_7, GPIO_LED_DISPLAY_COL_8},
 	.filas = {GPIO_LED_DISPLAY_ROW_1, GPIO_LED_DISPLAY_ROW_2, GPIO_LED_DISPLAY_ROW_3, GPIO_LED_DISPLAY_ROW_4, GPIO_LED_DISPLAY_ROW_5, GPIO_LED_DISPLAY_ROW_6, GPIO_LED_DISPLAY_ROW_7},
 
-	// TODO Falta algo aquí? (A completar por el alumno...)
+	// DONE Falta algo aquí? (A completar por el alumno...)
 };
 
 //------------------------------------------------------
@@ -39,8 +39,10 @@ TipoLedDisplay led_display = {
 int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 {
 	int result = 0;
-	// DONE inizializar HW (pantalla y teclado?)
+	// DONE Inicializar los gpio
 	wiringPiSetupGpio();
+
+	// DONE inizializar HW (pantalla y teclado?)
 	InicializaTeclado(&teclado);
 	InicializaLedDisplay(&led_display);
 	p_sistema->arkanoPi.p_pantalla = &(led_display.pantalla);
@@ -53,22 +55,24 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 		return -1;
 	}*/
 
+	// DONE Inicializar timer del juego
+	p_sistema->arkanoPi.tmr_actualizacion_juego = tmr_new(tmr_actualizacion_juego_isr);
+
 	// DONE Inicializar timer asociado al teclado numérico
 	teclado.tmr_duracion_columna = tmr_new(timer_duracion_columna_isr);
 	tmr_startms((tmr_t *)(teclado.tmr_duracion_columna), TIMEOUT_COLUMNA_TECLADO);
 
-	/*led_display.tmr_refresco_display = tmr_new(timer_refresco_display_isr);
-	tmr_startms((tmr_t *)(led_display.tmr_refresco_display), TIMEOUT_COLUMNA_DISPLAY);*/
+	// DONE Inicializar timer asociado al display
+	led_display.tmr_refresco_display = tmr_new(timer_refresco_display_isr);
+	tmr_startms((tmr_t *)(led_display.tmr_refresco_display), TIMEOUT_COLUMNA_DISPLAY);
 
+	// DONE Inicializar thread encargado de refrescar la pantalla
 	result = piThreadCreate(thread_pantalla);
 	if (result != 0)
 	{
 		printf("Thread didn't start!!!\n");
 		return -1;
 	}
-
-	// DONE Inicializar los gpio
-	// TODO hay que poner los pines extra que necesitamos para nuestro display (no usamos el convertor 3 a 8). Esto no va aquí pero en algún sitio lo tenía que poner
 
 	return result;
 }
