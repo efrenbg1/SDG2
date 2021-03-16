@@ -392,7 +392,7 @@ int CompruebaBotonPulsado(fsm_t *this)
 	result = (flags & FLAG_BOTON);
 	piUnlock(SYSTEM_FLAGS_KEY);
 
-	/*tipo_arkanoPi *p_arkanoPi;
+	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi *)(this->user_data);
 	if (animar(p_arkanoPi->p_pantalla))
 	{
@@ -401,7 +401,7 @@ int CompruebaBotonPulsado(fsm_t *this)
 		printf("\nPusle cualquier tecla para empezar...\n");
 		fflush(stdout);
 		piUnlock(STD_IO_BUFFER_KEY);
-	}*/
+	}
 
 	return result;
 }

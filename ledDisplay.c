@@ -83,6 +83,8 @@ void ActualizaLedDisplay(TipoLedDisplay *led_display)
 
 int CompruebaTimeoutColumnaDisplay(fsm_t *this)
 {
+	return 1;
+
 	int result = 0;
 	TipoLedDisplay *p_ledDisplay;
 	p_ledDisplay = (TipoLedDisplay *)(this->user_data);
@@ -104,7 +106,7 @@ void ActualizaExcitacionDisplay(fsm_t *this)
 	p_ledDisplay = (TipoLedDisplay *)(this->user_data);
 
 	// Reiniciar TIMER
-	tmr_startms((tmr_t *)(p_ledDisplay->tmr_refresco_display), TIMEOUT_COLUMNA_DISPLAY);
+	//tmr_startms((tmr_t *)(p_ledDisplay->tmr_refresco_display), TIMEOUT_COLUMNA_DISPLAY);
 
 	piLock(MATRIX_KEY);
 
@@ -126,7 +128,7 @@ void ActualizaExcitacionDisplay(fsm_t *this)
 		}
 		else
 		{
-			digitalWrite(p_ledDisplay->filas[i], HIGH);
+			digitalWrite(p_ledDisplay->filas[i], LOW);
 		}
 	}
 
