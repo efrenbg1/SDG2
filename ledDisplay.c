@@ -78,14 +78,12 @@ void ActualizaExcitacionDisplay(fsm_t *this)
 	TipoLedDisplay *p_ledDisplay;
 	p_ledDisplay = (TipoLedDisplay *)(this->user_data);
 
-	// Reiniciar TIMER
-	tmr_startms((tmr_t *)(p_ledDisplay->tmr_refresco_display), TIMEOUT_COLUMNA_DISPLAY);
-
-	piLock(MATRIX_KEY);
-
 	// Restablecer flag
+	piLock(MATRIX_KEY);
 	p_ledDisplay->flags &= ~FLAG_TIMEOUT_COLUMNA_DISPLAY;
+	piUnlock(MATRIX_KEY);
 
+	piLock(STD_IO_BUFFER_KEY);
 	// Apagar columna previa
 	int actual = p_ledDisplay->p_columna;
 	digitalWrite(p_ledDisplay->pines_control_columnas[actual], HIGH);
@@ -109,8 +107,10 @@ void ActualizaExcitacionDisplay(fsm_t *this)
 
 	// Encender nueva columna
 	digitalWrite(p_ledDisplay->pines_control_columnas[actual], LOW);
+	piUnlock(STD_IO_BUFFER_KEY);
 
-	piUnlock(MATRIX_KEY);
+	// Reiniciar TIMER
+	tmr_startms((tmr_t *)(p_ledDisplay->tmr_refresco_display), TIMEOUT_COLUMNA_DISPLAY);
 }
 
 //------------------------------------------------------
