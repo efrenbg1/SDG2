@@ -38,8 +38,9 @@ void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla)
 	// DONE Quitar o poner? (limpia la pantalla del terminal)
 	printf("\e[1;1H\e[2J");
 	fflush(stdout);
-	printf("\n[PANTALLA]\n");
-	fflush(stdout);
+
+	char pantalla_terminal[250] = {'\0'};
+	strcpy(pantalla_terminal, "\n[PANTALLA]\n");
 	for (i = 0; i < NUM_FILAS_DISPLAY; i++)
 	{
 		for (j = 0; j < NUM_COLUMNAS_DISPLAY; j++)
@@ -47,17 +48,21 @@ void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla)
 			// DONE Quitar los ceros para que el terminal quede más limpio
 			if (p_pantalla->matriz[i][j] == 0)
 			{
-				printf(" ");
+				strcat(pantalla_terminal, " ");
 			}
 			else
 			{
-				printf("%d", p_pantalla->matriz[i][j]);
+				//char celda[2];
+				//sprintf(celda, "%d", p_pantalla->matriz[i][j]);
+				//sprintf(pantalla+strlen(pantalla), "%d", )
+				strcat(pantalla_terminal, "1");
+				//printf("%d", p_pantalla->matriz[i][j]);
 			}
-			fflush(stdout);
 		}
-		printf("\n");
-		fflush(stdout);
+		strcat(pantalla_terminal, "\n");
 	}
+	actualizaPantallaHttp(pantalla_terminal);
+	printf("%s\n", pantalla_terminal);
 	fflush(stdout);
 #endif
 }

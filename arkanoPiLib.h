@@ -8,6 +8,7 @@
 
 #include "ledDisplay.h"
 #include "animar.h"
+#include "http.h"
 
 enum t_direccion
 {

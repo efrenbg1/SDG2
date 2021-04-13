@@ -9,6 +9,7 @@
                 "-lpthread",
                 "-lwiringPi",
                 "-lrt",
+                "-lmicrohttpd",
                 "*.c",
                 "-o",
                 "arkanoPi",
@@ -17,36 +18,12 @@
             "group": "build"
         },
         {
-            "label": "BuildHttp",
-            "type": "shell",
-            "command": "gcc",
-            "args": [
-                "-lmicrohttpd",
-                "http.c",
-                "-o",
-                "http",
-                "-g"
-            ],
-            "group": "build"
-        },
-        {
-            "label": "oldRun",
+            "label": "Run",
             "type": "shell",
             "command": "${workspaceFolder}/arkanoPi",
             "args": [],
             "dependsOn": [
                 "Build"
-            ]
-        },
-        {
-            "label": "Run",
-            "type": "shell",
-            "command": "${workspaceFolder}/http",
-            "args": [
-                "81"
-            ],
-            "dependsOn": [
-                "BuildHttp"
             ]
         }
     ]

@@ -8,6 +8,7 @@
 #include "teclado_TL04.h"
 #include "arkanoPiLib.h"
 #include "ledDisplay.h"
+#include "http.h"
 
 typedef struct
 {

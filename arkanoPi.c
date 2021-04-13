@@ -46,6 +46,14 @@ TipoLedDisplay led_display = {
 int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 {
 	int result = 0;
+
+	result = inicializaServidorHttp();
+	if (result != 0)
+	{
+		printf("HTTP thread didn't start!!!\n");
+		return -1;
+	}
+
 	// DONE Inicializar los gpio
 	wiringPiSetupGpio();
 

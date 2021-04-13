@@ -9,7 +9,7 @@ int timeout = 1000;
 
 // Cursores de la animación
 int fila = 0, columna = 0, direccion = 1, direccion2 = 1;
-int pantalla[7][8] = {0};
+int pantalla_animar[7][8] = {0};
 
 void animarFinal()
 {
@@ -25,7 +25,7 @@ int animar(tipo_pantalla *p_pantalla)
     }
     timeout = 100;
 
-    pantalla[fila][columna] = direccion ? 1 : 0;
+    pantalla_animar[fila][columna] = direccion ? 1 : 0;
 
     columna += direccion2 ? 1 : -1;
 
@@ -54,7 +54,7 @@ int animar(tipo_pantalla *p_pantalla)
     {
         for (int j = 0; j < NUM_COLUMNAS_DISPLAY; j++)
         {
-            p_pantalla->matriz[i][j] = pantalla[i][j];
+            p_pantalla->matriz[i][j] = pantalla_animar[i][j];
         }
     }
 
