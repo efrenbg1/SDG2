@@ -22,7 +22,7 @@ void ActualizaPelota(tipo_arkanoPi *p_arkanoPi)
     // 181
     // 000
 
-    // TODO Cambiar direcciones por las que nos dan
+    // DONE Cambiar direcciones por las que nos dan
 
     if (CompruebaReboteParedesVerticales(*p_arkanoPi))
     {

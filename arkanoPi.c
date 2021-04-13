@@ -1,3 +1,10 @@
+// DONE Efrén -> Animación de inicio
+// TODO Juan -> Caso que pelota aparezca posicion pala (perdida automatica)
+// TODO Juan -> Caso pelota se salte ladrillo
+// TODO Juan -> Ampliar pantalla de 8x8
+// TODO Juan -> Diferentes niveles (más ladrillos, velocidad de pelota...)
+// TODO Efrén -> Pala que de la vuelta por un lado y otro
+// TODO Efrén -> Mejorar refresco display para evitar el parpadeo
 
 #include "arkanoPi.h"
 
@@ -48,12 +55,12 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema)
 	p_sistema->arkanoPi.p_pantalla = &(led_display.pantalla);
 
 	// Lanzamos thread para exploracion del teclado convencional del PC
-	/*result = piThreadCreate(thread_explora_teclado_PC);
+	result = piThreadCreate(thread_explora_teclado_PC);
 	if (result != 0)
 	{
 		printf("Thread didn't start!!!\n");
 		return -1;
-	}*/
+	}
 
 	// DONE Inicializar timer del juego
 	p_sistema->arkanoPi.tmr_actualizacion_juego = tmr_new(tmr_actualizacion_juego_isr);
