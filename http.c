@@ -1,4 +1,6 @@
 #include "http.h"
+#include "arkanoPiLib.h"
+#include <wiringPi.h>
 
 pthread_mutex_t lock_pantalla;
 char pantalla_http[250] = {'\0'};
@@ -43,12 +45,44 @@ static int thread_http(void *cls,
     int resultado;
 
     // Enviar datos de la pantalla del juego si la URL es "/update"
-    if (strcmp(url, "/update") == 0)
+    if (strcmp(url, "/pantalla") == 0)
     {
         pthread_mutex_lock(&lock_pantalla);
         respuesta = MHD_create_response_from_buffer(strlen(pantalla_http), (void *)pantalla_http, MHD_RESPMEM_PERSISTENT);
+        MHD_add_response_header(respuesta, "Content-Type", "application/json; charset=utf-8");
+        MHD_add_response_header(respuesta, "X-Content-Type-Options", "nosniff");
+        MHD_add_response_header(respuesta, "Cache-Control", "no-cache");
         resultado = MHD_queue_response(connection, MHD_HTTP_OK, respuesta);
         pthread_mutex_unlock(&lock_pantalla);
+        MHD_destroy_response(respuesta);
+        return resultado;
+    }
+
+    // Actuar sobre la fsm si se ha pulsado alguna tecla "/pulsar"
+    if (strcmp(url, "/teclado") == 0)
+    {
+        const char *tecla = MHD_lookup_connection_value(connection, MHD_GET_ARGUMENT_KIND, "tecla");
+        piLock(SYSTEM_FLAGS_KEY);
+        flags |= FLAG_BOTON;
+        switch (tecla[0])
+        {
+        case 'a':
+            flags |= FLAG_MOV_IZQUIERDA;
+            break;
+        case 'd':
+            flags |= FLAG_MOV_DERECHA;
+            break;
+        default:
+            printf("INVALID KEY!!!\n");
+            break;
+        }
+        piUnlock(SYSTEM_FLAGS_KEY);
+
+        respuesta = MHD_create_response_from_buffer(strlen(""), (void *)"", MHD_RESPMEM_PERSISTENT);
+        MHD_add_response_header(respuesta, "Content-Type", "application/json; charset=utf-8");
+        MHD_add_response_header(respuesta, "X-Content-Type-Options", "nosniff");
+        MHD_add_response_header(respuesta, "Cache-Control", "no-cache");
+        resultado = MHD_queue_response(connection, MHD_HTTP_OK, respuesta);
         MHD_destroy_response(respuesta);
         return resultado;
     }
@@ -80,6 +114,7 @@ static int thread_http(void *cls,
     if (archivo == NULL)
     {
         respuesta = MHD_create_response_from_buffer(strlen(no_encontrado), (void *)no_encontrado, MHD_RESPMEM_PERSISTENT);
+        MHD_add_response_header(respuesta, "Cache-Control", "no-cache");
         resultado = MHD_queue_response(connection, MHD_HTTP_NOT_FOUND, respuesta);
     }
     else
@@ -91,6 +126,7 @@ static int thread_http(void *cls,
             MHD_destroy_response(respuesta);
             return MHD_NO;
         }
+        MHD_add_response_header(respuesta, "Cache-Control", "no-cache");
         resultado = MHD_queue_response(connection, MHD_HTTP_OK, respuesta);
     }
 

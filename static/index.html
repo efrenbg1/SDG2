@@ -14,25 +14,59 @@
 </head>
 
 <body>
-    <h1>Hello, world!</h1>
-    <p id="pantalla"></p>
+    <div class="container">
+        <div class="row my-4">
+            <div class="col-sm"></div>
+            <div class="col-sm m-0 p-0">
+                <canvas id="pantalla" width="400" height="400"></canvas>
+            </div>
+            <div class="col-sm"></div>
+        </div>
+    </div>
 
-    <!-- Optional JavaScript; choose one of the two! -->
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
         crossorigin="anonymous"></script>
 </body>
 
 <script>
+    var canvas = document.getElementById('pantalla');
+    var ctx = canvas.getContext('2d');
+    var colors = ['rgb(255, 0, 255)', 'rgb(230, 75, 32)', 'rgb(10, 3, 160)']
+
+    var waiting = false;
     setInterval(function () {
-        fetch('/update').then(response => {
-            response.text().then(function (text) {
-                document.getElementById("pantalla").innerText = text;
+        if (waiting) return;
+        waiting = true;
+        fetch('/pantalla').then(response => {
+            waiting = false;
+            response.json().then(function (obj) {
+                for (var y = 0; y < obj.length; y++) {
+                    for (var x = 0; x < obj[y].length; x++) {
+                        if (obj[y][x]) {
+                            ctx.fillStyle = colors[0];
+                        } else {
+                            ctx.fillStyle = colors[2];
+                        }
+                        ctx.fillRect(50 * x, 50 * y, 40, 40);
+                    }
+                }
+                //document.getElementById("pantalla").innerHTML = text;
             });
         });
     }, 200);
+
+    var lastKey = performance.now();
+    document.onkeypress = function (e) {
+        if ((performance.now() - lastKey) < 200) return;
+        lastKey = performance.now();
+        e = e || window.event;
+        var key = "s";
+        if (e.keyCode == 97) key = 'a';
+        if (e.keyCode == 100) key = 'd';
+        fetch('/teclado?tecla=' + key);
+    };
 
 </script>
 

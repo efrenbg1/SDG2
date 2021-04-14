@@ -38,32 +38,46 @@ void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla)
 	// DONE Quitar o poner? (limpia la pantalla del terminal)
 	printf("\e[1;1H\e[2J");
 	fflush(stdout);
-
-	char pantalla_terminal[250] = {'\0'};
-	strcpy(pantalla_terminal, "\n[PANTALLA]\n");
+	printf("\n[PANTALLA]\n");
+	fflush(stdout);
+	char pantalla_json[250] = {'\0'};
+	strcat(pantalla_json, "[");
 	for (i = 0; i < NUM_FILAS_DISPLAY; i++)
 	{
+		if (i)
+		{
+			strcat(pantalla_json, ",");
+		}
+		strcat(pantalla_json, "[");
 		for (j = 0; j < NUM_COLUMNAS_DISPLAY; j++)
 		{
 			// DONE Quitar los ceros para que el terminal quede más limpio
+			if (j)
+			{
+				strcat(pantalla_json, ",");
+			}
 			if (p_pantalla->matriz[i][j] == 0)
 			{
-				strcat(pantalla_terminal, " ");
+				strcat(pantalla_json, "0");
+				printf(" ");
 			}
 			else
 			{
 				//char celda[2];
 				//sprintf(celda, "%d", p_pantalla->matriz[i][j]);
 				//sprintf(pantalla+strlen(pantalla), "%d", )
-				strcat(pantalla_terminal, "1");
-				//printf("%d", p_pantalla->matriz[i][j]);
+				strcat(pantalla_json, "1");
+				printf("%d", p_pantalla->matriz[i][j]);
 			}
 		}
-		strcat(pantalla_terminal, "\n");
+		strcat(pantalla_json, "]");
+		printf("\n");
+		fflush(stdout);
 	}
-	actualizaPantallaHttp(pantalla_terminal);
-	printf("%s\n", pantalla_terminal);
-	fflush(stdout);
+	strcat(pantalla_json, "]");
+	actualizaPantallaHttp(pantalla_json);
+	/*printf("%s\n", pantalla_terminal);
+	fflush(stdout);*/
 #endif
 }
 
