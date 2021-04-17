@@ -1,8 +1,6 @@
 #include "http.h"
-#include "arkanoPiLib.h"
-#include <wiringPi.h>
 
-pthread_mutex_t lock_pantalla;
+pthread_mutex_t lock_pantalla_http;
 char pantalla_http[250] = {'\0'};
 
 static ssize_t
@@ -47,13 +45,13 @@ static int thread_http(void *cls,
     // Enviar datos de la pantalla del juego si la URL es "/update"
     if (strcmp(url, "/pantalla") == 0)
     {
-        pthread_mutex_lock(&lock_pantalla);
+        pthread_mutex_lock(&lock_pantalla_http);
         respuesta = MHD_create_response_from_buffer(strlen(pantalla_http), (void *)pantalla_http, MHD_RESPMEM_PERSISTENT);
         MHD_add_response_header(respuesta, "Content-Type", "application/json; charset=utf-8");
         MHD_add_response_header(respuesta, "X-Content-Type-Options", "nosniff");
         MHD_add_response_header(respuesta, "Cache-Control", "no-cache");
         resultado = MHD_queue_response(connection, MHD_HTTP_OK, respuesta);
-        pthread_mutex_unlock(&lock_pantalla);
+        pthread_mutex_unlock(&lock_pantalla_http);
         MHD_destroy_response(respuesta);
         return resultado;
     }
@@ -135,12 +133,38 @@ static int thread_http(void *cls,
     return resultado;
 }
 
-void actualizaPantallaHttp(char *_pantalla)
+void actualizaPantallaHttp(tipo_pantalla *p_pantalla)
 {
-    pthread_mutex_lock(&lock_pantalla);
-    //memcpy(pantalla_http, _pantalla, strlen(_pantalla);
-    strncpy(pantalla_http, _pantalla, strlen(_pantalla));
-    pthread_mutex_unlock(&lock_pantalla);
+    pthread_mutex_lock(&lock_pantalla_http);
+
+    strcpy(pantalla_http, "[");
+    for (int i = 0; i < NUM_FILAS_DISPLAY; i++)
+    {
+        if (i)
+        {
+            strcat(pantalla_http, ",");
+        }
+        strcat(pantalla_http, "[");
+        for (int j = 0; j < NUM_COLUMNAS_DISPLAY; j++)
+        {
+            if (j)
+            {
+                strcat(pantalla_http, ",");
+            }
+            if (p_pantalla->matriz[i][j] == 0)
+            {
+                strcat(pantalla_http, "0");
+            }
+            else
+            {
+                strcat(pantalla_http, "1");
+            }
+        }
+        strcat(pantalla_http, "]");
+    }
+    strcat(pantalla_http, "]");
+
+    pthread_mutex_unlock(&lock_pantalla_http);
 }
 
 int inicializaServidorHttp()

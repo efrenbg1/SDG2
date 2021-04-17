@@ -4,21 +4,40 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>arkanoPi</title>
 </head>
 
 <body>
     <div class="container">
+        <div class="row mt-4 mb-0 mx-1 text-center" id="error" style="display: none;">
+            <div class="alert alert-danger mb-0" role="alert"
+                onclick="document.getElementById('error').style.display = 'none'; displayLock = false;">
+                <b>¡Se ha perdido la conexión!</b><br>&rarr;&nbsp;Toca aquí para reintentar&nbsp;&larr;
+            </div>
+        </div>
         <div class="row my-4">
             <div class="col-sm"></div>
-            <div class="col-sm m-0 p-0">
-                <canvas id="pantalla" width="400" height="400"></canvas>
+            <div class="col-sm m-0 p-0 text-center">
+                <canvas id="pantalla"></canvas>
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-sm"></div>
+            <div class="col-sm-6 m-0 p-0 text-center">
+                <button type="button" class="btn btn-outline-primary btn-lg px-5 py-4 mx-2" id="a">
+                    A
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-lg px-5 py-4 mx-2" id="d">
+                    D
+                </button>
             </div>
             <div class="col-sm"></div>
         </div>
@@ -30,44 +49,8 @@
         crossorigin="anonymous"></script>
 </body>
 
-<script>
-    var canvas = document.getElementById('pantalla');
-    var ctx = canvas.getContext('2d');
-    var colors = ['rgb(255, 0, 255)', 'rgb(230, 75, 32)', 'rgb(10, 3, 160)']
-
-    var waiting = false;
-    setInterval(function () {
-        if (waiting) return;
-        waiting = true;
-        fetch('/pantalla').then(response => {
-            waiting = false;
-            response.json().then(function (obj) {
-                for (var y = 0; y < obj.length; y++) {
-                    for (var x = 0; x < obj[y].length; x++) {
-                        if (obj[y][x]) {
-                            ctx.fillStyle = colors[0];
-                        } else {
-                            ctx.fillStyle = colors[2];
-                        }
-                        ctx.fillRect(50 * x, 50 * y, 40, 40);
-                    }
-                }
-                //document.getElementById("pantalla").innerHTML = text;
-            });
-        });
-    }, 200);
-
-    var lastKey = performance.now();
-    document.onkeypress = function (e) {
-        if ((performance.now() - lastKey) < 200) return;
-        lastKey = performance.now();
-        e = e || window.event;
-        var key = "s";
-        if (e.keyCode == 97) key = 'a';
-        if (e.keyCode == 100) key = 'd';
-        fetch('/teclado?tecla=' + key);
-    };
-
-</script>
+<script src="ledDisplay.js"></script>
+<script src="TL04.js"></script>
+<script src="index.js"></script>
 
 </html>

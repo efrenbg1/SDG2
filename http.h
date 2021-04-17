@@ -2,26 +2,10 @@
 #define HTTP_H
 
 /*
-     This file is part of libmicrohttpd
-     (C) 2007 Christian Grothoff (and other contributing authors)
-     This library is free software; you can redistribute it and/or
-     modify it under the terms of the GNU Lesser General Public
-     License as published by the Free Software Foundation; either
-     version 2.1 of the License, or (at your option) any later version.
-     This library is distributed in the hope that it will be useful,
-     but WITHOUT ANY WARRANTY; without even the implied warranty of
-     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-     Lesser General Public License for more details.
-     You should have received a copy of the GNU Lesser General Public
-     License along with this library; if not, write to the Free Software
-     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+     libmicrohttpd es una librería escrita por Christian Grothoff.
+     Este código está basado en el ejemplo descrito en "fileserver_example.c"
+     el cual se encuentra en el repositorio oficial de la librería
 */
-
-/**
- * @file fileserver_example.c
- * @brief minimal example for how to use libmicrohttpd to serve files
- * @author Christian Grothoff
- */
 
 #include <microhttpd.h>
 #include <unistd.h>
@@ -31,12 +15,14 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <pthread.h>
+#include <wiringPi.h>
+#include "ledDisplay.h"
 
 #define no_encontrado "<html><head><title>File not found</title></head><body>File not found</body></html>"
 
 #define puerto 8081
 
-void actualizaPantallaHttp(char *);
+void actualizaPantallaHttp(tipo_pantalla *);
 int inicializaServidorHttp();
 
 #endif
