@@ -1,10 +1,9 @@
 // DONE Efrén -> Animación de inicio
-// TODO Juan -> Caso que pelota aparezca posicion pala (perdida automatica)
+// DONE Juan -> Caso que pelota aparezca posicion pala (perdida automatica)
 // TODO Juan -> Caso pelota se salte ladrillo
-// TODO Juan -> Ampliar pantalla de 8x8
-// TODO Juan -> Diferentes niveles (más ladrillos, velocidad de pelota...)
+// DONE Juan -> Diferentes niveles (más ladrillos)
+// DONE Juan -> Velocidad de pelota
 // TODO Efrén -> Pala que de la vuelta por un lado y otro
-// TODO Efrén -> Mejorar refresco display para evitar el parpadeo
 
 #include "arkanoPi.h"
 

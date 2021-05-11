@@ -1,6 +1,35 @@
 #include "arkanoPiLib.h"
 
 int ladrillos_basico[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
+	{1, 0, 1, 0, 1, 0, 1, 0},
+	{1, 0, 1, 0, 1, 0, 1, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+};
+
+int ladrillos_2[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
+	{1, 1, 1, 1, 1, 1, 1, 1},
+	{1, 0, 1, 1, 1, 0, 1, 1},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+};
+
+int ladrillos_3[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
+	{1, 1, 1, 1, 1, 1, 1, 1},
+	{1, 1, 1, 1, 1, 1, 1, 1},
+	{0, 0, 1, 1, 1, 1, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+};
+int ladrillos_4[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
 	{1, 1, 1, 1, 1, 1, 1, 1},
 	{1, 1, 1, 1, 1, 1, 1, 1},
 	{0, 0, 0, 0, 0, 0, 0, 0},
@@ -9,7 +38,6 @@ int ladrillos_basico[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
 	{0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0},
 };
-
 //------------------------------------------------------
 // FUNCIONES DE VISUALIZACION (ACTUALIZACION DEL OBJETO PANTALLA QUE LUEGO USARA EL DISPLAY)
 //------------------------------------------------------
@@ -79,12 +107,29 @@ void ReseteaPantalla(tipo_pantalla *p_pantalla)
 void InicializaLadrillos(tipo_pantalla *p_ladrillos)
 {
 	int i = 0, j = 0;
+	int control_niv = rand() % 4;
 
 	for (i = 0; i < NUM_FILAS_DISPLAY; i++)
 	{
 		for (j = 0; j < NUM_COLUMNAS_DISPLAY; j++)
 		{
-			p_ladrillos->matriz[i][j] = ladrillos_basico[i][j];
+
+			if (control_niv == 0)
+			{
+				p_ladrillos->matriz[i][j] = ladrillos_basico[i][j];
+			}
+			else if (control_niv == 1)
+			{
+				p_ladrillos->matriz[i][j] = ladrillos_2[i][j];
+			}
+			else if (control_niv == 2)
+			{
+				p_ladrillos->matriz[i][j] = ladrillos_3[i][j];
+			}
+			else if (control_niv == 3)
+			{
+				p_ladrillos->matriz[i][j] = ladrillos_4[i][j];
+			}
 		}
 	}
 }
@@ -93,12 +138,14 @@ void InicializaPelota(tipo_pelota *p_pelota)
 {
 	// Aleatorizamos la posicion inicial de la pelota
 	p_pelota->x = rand() % NUM_COLUMNAS_DISPLAY;
-	// TODO caso que pelota aparezca posicion pala (perdida automatica)
-	p_pelota->y = 2 + rand() % (NUM_FILAS_DISPLAY - 2); // 2 evita que aparezca encima de ladrillos y para que no empiece demasiado pegada al suelo de la pantalla
-
-	// Pelota inicialmente en el centro de la pantalla
-	//p_pelota->x = NUM_COLUMNAS_DISPLAY/2 - 1;
-	//p_pelota->y = NUM_FILAS_DISPLAY/2 -1 ;
+	//DONE caso que pelota aparezca posicion pala (perdida automatica)
+	int inicial = 2; //Generar posicion de la pala entre (NUM_FILAS_DISPLAY-x) e inicial
+	int x = 3;
+	p_pelota->y = rand() % ((NUM_FILAS_DISPLAY - x) - inicial + 1) + inicial;
+	// rand() % ((NUM_FILAS_DISPLAY-2)-inicial+1)-inicial;
+	//Pelota inicialmente en el centro de la pantalla
+	//p_pelota->x = NUM_COLUMNAS_DISPLAY / 2 - 1;
+	//p_pelota->y = NUM_FILAS_DISPLAY / 2 - 1;
 
 	InicializaPosiblesTrayectorias(p_pelota);
 
@@ -247,7 +294,7 @@ void CambiarDireccionPelota(tipo_pelota *p_pelota, enum t_direccion direccion)
 	}
 }
 
-void ActualizaPosicionPala(tipo_pala *p_pala, enum t_direccion direccion)
+void ActualizaPosicionPala(tipo_pala *p_pala, enum t_direccion direccion, tipo_pantalla *p_pantalla)
 {
 	switch (direccion)
 	{
@@ -260,6 +307,12 @@ void ActualizaPosicionPala(tipo_pala *p_pala, enum t_direccion direccion)
 		// Dejamos que la pala rebase parcialmente el límite del area de juego
 		if (p_pala->x - 1 >= -2)
 			p_pala->x = p_pala->x - 1;
+
+		// else if (p_pala->x - 1 >= -1)
+		// {
+		// 	p_pala->x = p_pala->x - 1;
+		// 	p_pantalla->matriz[4][4] = 1;
+		// }
 		break;
 	default:
 		printf("[ERROR!!!!][direccion NO VALIDA!!!!][%d]", direccion);
@@ -495,7 +548,7 @@ void MuevePalaIzquierda(fsm_t *this)
 	piUnlock(SYSTEM_FLAGS_KEY);
 
 	piLock(STD_IO_BUFFER_KEY);
-	ActualizaPosicionPala(&p_arkanoPi->pala, IZQUIERDA);
+	ActualizaPosicionPala(&p_arkanoPi->pala, IZQUIERDA, (tipo_pantalla *)(p_arkanoPi->p_pantalla));
 	ActualizaPantalla(p_arkanoPi);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
 	piUnlock(STD_IO_BUFFER_KEY);
@@ -515,7 +568,7 @@ void MuevePalaDerecha(fsm_t *this)
 	piUnlock(SYSTEM_FLAGS_KEY);
 
 	piLock(STD_IO_BUFFER_KEY);
-	ActualizaPosicionPala(&p_arkanoPi->pala, DERECHA);
+	ActualizaPosicionPala(&p_arkanoPi->pala, DERECHA, (tipo_pantalla *)(p_arkanoPi->p_pantalla));
 	ActualizaPantalla(p_arkanoPi);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
 	piUnlock(STD_IO_BUFFER_KEY);
@@ -543,7 +596,19 @@ void ActualizarJuego(fsm_t *this)
 	piUnlock(SYSTEM_FLAGS_KEY);
 
 	ActualizaPelota(p_arkanoPi);
-	tmr_startms((tmr_t *)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
+	int control_dif = CalculaLadrillosRestantes((tipo_pantalla *)(&(p_arkanoPi->ladrillos)));
+	if (control_dif > 8)
+	{
+		tmr_startms((tmr_t *)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
+	}
+	else if (control_dif > 4)
+	{
+		tmr_startms((tmr_t *)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO_2);
+	}
+	else
+	{
+		tmr_startms((tmr_t *)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO_3);
+	}
 }
 
 // void FinalJuego (void): función encargada de mostrar en la ventana de

@@ -5,6 +5,7 @@
         "arkanopi.h": "c",
         "leddisplay.h": "c",
         "tmr.h": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "*.tcc": "c"
     }
 }

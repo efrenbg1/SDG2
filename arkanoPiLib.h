@@ -75,7 +75,7 @@ void ReseteaMatriz(tipo_pantalla *p_pantalla);
 // PROCEDIMIENTOS PARA LA GESTION DEL JUEGO
 //------------------------------------------------------
 void CambiarDireccionPelota(tipo_pelota *p_pelota, enum t_direccion direccion);
-void ActualizaPosicionPala(tipo_pala *p_pala, enum t_direccion direccion);
+void ActualizaPosicionPala(tipo_pala *p_pala, enum t_direccion direccion, tipo_pantalla *p_pantalla);
 void ActualizaPosicionPelota(tipo_pelota *p_pelota);
 int CompruebaReboteLadrillo(tipo_arkanoPi *p_arkanoPi);
 int CompruebaReboteParedesVerticales(tipo_arkanoPi arkanoPi);

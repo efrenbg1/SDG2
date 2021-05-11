@@ -24,6 +24,8 @@
 // INTERVALO DE GUARDA ANTI-REBOTES
 #define DEBOUNCE_TIME 250
 #define TIMEOUT_ACTUALIZA_JUEGO 1000
+#define TIMEOUT_ACTUALIZA_JUEGO_2 800
+#define TIMEOUT_ACTUALIZA_JUEGO_3 600
 
 // A 'key' which we can lock and unlock - values are 0 through 3
 //	This is interpreted internally as a pthread_mutex by wiringPi
