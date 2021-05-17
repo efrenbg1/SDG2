@@ -1,9 +1,7 @@
 // DONE Efrén -> Animación de inicio
 // DONE Juan -> Caso que pelota aparezca posicion pala (perdida automatica)
-// TODO Juan -> Caso pelota se salte ladrillo
 // DONE Juan -> Diferentes niveles (más ladrillos)
 // DONE Juan -> Velocidad de pelota
-// TODO Efrén -> Pala que de la vuelta por un lado y otro
 
 #include "arkanoPi.h"
 
