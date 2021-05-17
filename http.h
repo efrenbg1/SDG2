@@ -18,10 +18,13 @@
 #include <wiringPi.h>
 #include "ledDisplay.h"
 
+// Página HTML que se muestra cuando el archivo no se encuentra en la carpeta static
 #define no_encontrado "<html><head><title>File not found</title></head><body>File not found</body></html>"
 
+// Puerto TCP en el que escucha el servidor HTTP
 #define puerto 8081
 
+// Prototipo funciones (para ser llamadas desde el juego)
 void actualizaPantallaHttp(tipo_pantalla *);
 int inicializaServidorHttp();
 

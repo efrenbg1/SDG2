@@ -1,8 +1,11 @@
 #include "http.h"
 
+// Mutex asociado al string que contiene el la pantalla en formato JSON
 pthread_mutex_t lock_pantalla_http;
+// String que contiene la pantalla en formato JSON
 char pantalla_http[250] = {'\0'};
 
+// Lee el archivo del disco duro, lo introduce en buf y devuelve su tamaño en bytes
 static ssize_t
 file_reader(void *cls, uint64_t pos, char *buf, size_t max)
 {
@@ -12,6 +15,7 @@ file_reader(void *cls, uint64_t pos, char *buf, size_t max)
     return fread(buf, 1, max, file);
 }
 
+// Cierra el archivo y desaloca de memoria el objeto relacionado
 static void
 free_callback(void *cls)
 {
@@ -47,11 +51,11 @@ static int thread_http(void *cls,
     {
         pthread_mutex_lock(&lock_pantalla_http);
         respuesta = MHD_create_response_from_buffer(strlen(pantalla_http), (void *)pantalla_http, MHD_RESPMEM_PERSISTENT);
+        pthread_mutex_unlock(&lock_pantalla_http);
         MHD_add_response_header(respuesta, "Content-Type", "application/json; charset=utf-8");
         MHD_add_response_header(respuesta, "X-Content-Type-Options", "nosniff");
         MHD_add_response_header(respuesta, "Cache-Control", "no-cache");
         resultado = MHD_queue_response(connection, MHD_HTTP_OK, respuesta);
-        pthread_mutex_unlock(&lock_pantalla_http);
         MHD_destroy_response(respuesta);
         return resultado;
     }
@@ -69,9 +73,6 @@ static int thread_http(void *cls,
             break;
         case 'd':
             flags |= FLAG_MOV_DERECHA;
-            break;
-        default:
-            printf("INVALID KEY!!!\n");
             break;
         }
         piUnlock(SYSTEM_FLAGS_KEY);
@@ -100,7 +101,6 @@ static int thread_http(void *cls,
         strcpy(directorio, "static");
         strcat(directorio, url);
     }
-    printf("%s\n", directorio);
 
     // Abrir archivo si existe
     if (0 == stat(directorio, &buf))
@@ -133,6 +133,7 @@ static int thread_http(void *cls,
     return resultado;
 }
 
+// Actualiza la variable que contiene los datos de la pantalla en formato JSON
 void actualizaPantallaHttp(tipo_pantalla *p_pantalla)
 {
     pthread_mutex_lock(&lock_pantalla_http);
@@ -167,6 +168,7 @@ void actualizaPantallaHttp(tipo_pantalla *p_pantalla)
     pthread_mutex_unlock(&lock_pantalla_http);
 }
 
+// Iniciar el servidor HTTP en un thread por separado
 int inicializaServidorHttp()
 {
     struct MHD_Daemon *d = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION | MHD_USE_INTERNAL_POLLING_THREAD, puerto, NULL, NULL, &thread_http, no_encontrado, MHD_OPTION_END);
