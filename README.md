@@ -34,4 +34,5 @@ $ ./arkanoPi
  - Jugabilidad vía navegador web
 
 # Videos
+[![SDG2 - arkanoPi (2021)](/images/youtube1.png)](https://www.youtube.com/watch?v=xqU5KDnA7Vo "SDG2 - arkanoPi (2021)")
 [![SDG2 - arkanoPi (2021) - Sin parpadeo](/images/youtube2.png)](https://youtu.be/3kmyAcbGGjY "SDG2 - arkanoPi (2021) - Sin parpadeo")
