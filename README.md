@@ -23,6 +23,8 @@ $ gcc -lpthread -lwiringPi -lrt -lmicrohttpd *.c -o arkanoPi
 ```console
 $ ./arkanoPi
 ```
+ 5. El servidor web del juego escuchará las peticiones en el puerto 8081. Para conectarse hay que introducir la dirección del servidor en el navegador web:
+ [![8081](/images/url.png)]
 
 # Mejoras
 
