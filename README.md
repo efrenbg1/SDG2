@@ -5,6 +5,15 @@ Proyecto realizado por:
  - Efrén Boyarizo Gargallo
  - Juan González Vázquez
 
+# Mejoras
+
+ - Desarrollado con VSCode
+ - Animación de inactividad
+ - Posición inciial de la pelota
+ - Aumento de la velocidad del juego
+ - Niveles aleatorios
+ - Jugabilidad vía navegador web
+
 ## Cómo compilar
 
  1. Clonar repositorio (directamente en la Raspberry Pi):
@@ -25,15 +34,6 @@ $ ./arkanoPi
 ```
  5. El servidor web del juego escuchará las peticiones en el puerto 8081. Para conectarse hay que introducir la dirección del servidor en el navegador web:
  ![8081](/images/url.png)
-
-# Mejoras
-
- - Desarrollado con VSCode
- - Animación de inactividad
- - Posición inciial de la pelota
- - Aumento de la velocidad del juego
- - Niveles aleatorios
- - Jugabilidad vía navegador web
 
 # Videos
 [![SDG2 - arkanoPi (2021) - HTTP](/images/youtube3.png)](https://youtu.be/s7bFaaa1dQc "SDG2 - arkanoPi (2021) - HTTP")
